@@ -8,28 +8,49 @@
     <meta name="author" content="">
 
     <title>Hello Hasbihal!</title>
-    <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
+    <link rel="stylesheet" href='<%= static_path(@conn, "/css/app.css") %>'>
   </head>
 
   <body>
-    <div class="container">
-      <header class="header">
-        <nav role="navigation">
-          <ul class="nav nav-pills pull-right">
-            <li><a href="http://www.phoenixframework.org/docs">Get Started</a></li>
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="<%= page_path(@conn, :index) %>">hasbihal</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="<%= page_path(@conn, :index) %>">index</a></li>
+            <li><a href="<%= page_path(@conn, :about) %>">about</a></li>
           </ul>
-        </nav>
-        <span class="logo"></span>
-      </header>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="<%= user_path(@conn, :new) %>">register</a></li>
+            <li><a href="<%= session_path(@conn, :new) %>">sign in</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
 
+    <!-- Begin page content -->
+    <div class="container">
       <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
       <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
 
-      <main role="main">
-        <%= render @view_module, @view_template, assigns %>
-      </main>
+      <%= render @view_module, @view_template, assigns %>
+    </div>
 
-    </div> <!-- /container -->
-    <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
+    <footer class="footer">
+      <div class="container">
+        <p class="text-muted">&copy; <%= DateTime.utc_now().year %></p>
+      </div>
+    </footer>
+
+    <script src='<%= static_path(@conn, "/js/app.js") %>'></script>
   </body>
 </html>
