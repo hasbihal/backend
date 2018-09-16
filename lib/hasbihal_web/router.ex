@@ -13,18 +13,18 @@ defmodule HasbihalWeb.Router do
     plug(:accepts, ["json"])
   end
 
-  pipeline :browser_auth do
-    plug(Guardian.Plug.VerifySession)
-    plug(Guardian.Plug.LoadResource)
+  pipeline :auth do
+    plug(Hasbihal.Auth.Pipeline)
+    plug(Hasbihal.Auth.CurrentUser)
   end
 
-  pipeline :auth do
-    plug(Guardian.Plug.EnsureAuthenticated, handler: HasbihalWeb.AuthHandler)
+  pipeline :ensure_auth do
+    plug(Guardian.Plug.EnsureAuthenticated)
   end
 
   scope "/", HasbihalWeb do
     # Use the default browser stack
-    pipe_through([:browser])
+    pipe_through([:browser, :auth])
 
     get("/", PageController, :index)
     get("/about", PageController, :about)
@@ -34,7 +34,7 @@ defmodule HasbihalWeb.Router do
   end
 
   scope "/", HasbihalWeb do
-    pipe_through([:browser, :browser_auth, :auth])
+    pipe_through([:browser, :auth, :ensure_auth])
 
     get("/", PageController, :index)
 

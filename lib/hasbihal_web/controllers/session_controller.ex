@@ -6,6 +6,8 @@ defmodule HasbihalWeb.SessionController do
   alias Hasbihal.Users
   alias Hasbihal.Users.User
 
+  plug :redirect_if_signed_in when not action in [:delete]
+
   def new(conn, _params) do
     render(conn, "new.html")
   end
@@ -19,9 +21,11 @@ defmodule HasbihalWeb.SessionController do
   def create(conn, %{"session" => %{"email" => email, "password" => password}}) do
     case verify_credentials(email, password) do
       {:ok, user} ->
+        IO.inspect(user)
+
         conn
         |> put_flash(:info, "Successfully signed in")
-        |> Guardian.Plug.sign_in(user, %{some: "claim"}, ttl: {1, :minute})
+        |> Hasbihal.Guardian.Plug.sign_in(user)
         |> redirect(to: page_path(conn, :index))
 
       {:error, _reason} ->
@@ -33,9 +37,9 @@ defmodule HasbihalWeb.SessionController do
 
   def delete(conn, _params) do
     conn
-    |> Guardian.Plug.sign_out()
+    |> Hasbihal.Guardian.Plug.sign_out()
     |> put_flash(:info, "Successfully signed out")
-    |> redirect(to: "/")
+    |> redirect(to: page_path(conn, :index))
   end
 
   defp verify_credentials(email, password) when is_binary(email) and is_binary(password) do
@@ -59,6 +63,16 @@ defmodule HasbihalWeb.SessionController do
       {:ok, user}
     else
       {:error, :invalid_password}
+    end
+  end
+
+  defp redirect_if_signed_in(conn, _params) do
+    if conn.assigns.user_signed_in? do
+      conn
+      |> put_flash(:info, "Already signed in!")
+      |> redirect(to: page_path(conn, :index))
+    else
+      conn
     end
   end
 end

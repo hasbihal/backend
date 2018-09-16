@@ -2,9 +2,7 @@ defmodule HasbihalWeb.PageController do
   use HasbihalWeb, :controller
 
   def index(conn, _params) do
-    current_user = Guardian.Plug.current_resource(conn)
-
-    render(conn, "index.html", current_user: current_user)
+    render(conn, "index.html")
   end
 
   def about(conn, _params) do

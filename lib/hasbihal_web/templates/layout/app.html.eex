@@ -28,10 +28,18 @@
           <ul class="nav navbar-nav">
             <li class="active"><a href="<%= page_path(@conn, :index) %>">index</a></li>
             <li><a href="<%= page_path(@conn, :about) %>">about</a></li>
+            <%= if @user_signed_in? do %>
+              <li><a href="<%= user_path(@conn, :index) %>">users</a></li>
+            <% end %>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="<%= user_path(@conn, :new) %>">register</a></li>
-            <li><a href="<%= session_path(@conn, :new) %>">sign in</a></li>
+            <%= if @user_signed_in? do %>
+              <li><a href="<%= page_path(@conn, :index) %>"><%= @current_user.name %></a></li>
+              <li><%= link("sign out", to: session_path(@conn, :delete, @current_user.id), method: :delete, data: [confirm: "Really?"]) %></li>
+            <% else %>
+              <li><a href="<%= user_path(@conn, :new) %>">register</a></li>
+              <li><a href="<%= session_path(@conn, :new) %>">sign in</a></li>
+            <% end %>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
