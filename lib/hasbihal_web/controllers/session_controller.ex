@@ -21,8 +21,6 @@ defmodule HasbihalWeb.SessionController do
   def create(conn, %{"session" => %{"email" => email, "password" => password}}) do
     case verify_credentials(email, password) do
       {:ok, user} ->
-        IO.inspect(user)
-
         conn
         |> put_flash(:info, "Successfully signed in")
         |> Hasbihal.Guardian.Plug.sign_in(user)
