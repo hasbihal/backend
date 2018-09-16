@@ -12,43 +12,44 @@
   </head>
 
   <body>
-    <!-- Fixed navbar -->
-    <nav class="navbar navbar-default navbar-fixed-top">
+
+    <nav class="navbar navbar-expand-lg fixed-top navbar-light bg-light">
       <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="<%= page_path(@conn, :index) %>">hasbihal</a>
-        </div>
-        <div id="navbar" class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="<%= page_path(@conn, :index) %>">index</a></li>
-            <li><a href="<%= page_path(@conn, :about) %>">about</a></li>
+        <a class="navbar-brand" href="<%= page_path(@conn, :index) %>">hasbihal</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <li class="nav-item active"><a class="nav-link" href="<%= page_path(@conn, :index) %>">index</a></li>
+            <li class="nav-item"><a class="nav-link" href="<%= page_path(@conn, :about) %>">about</a></li>
             <%= if @user_signed_in? do %>
-              <li><a href="<%= user_path(@conn, :index) %>">users</a></li>
+              <li class="nav-item"><a class="nav-link" href="<%= user_path(@conn, :index) %>">users</a></li>
             <% end %>
           </ul>
-          <ul class="nav navbar-nav navbar-right">
+
+          <ul class="navbar-nav my-2 my-lg-0">
             <%= if @user_signed_in? do %>
-              <li><a href="<%= page_path(@conn, :index) %>"><%= @current_user.name %></a></li>
-              <li><%= link("sign out", to: session_path(@conn, :delete, @current_user.id), method: :delete, data: [confirm: "Really?"]) %></li>
+              <li class="nav-item"><a class="nav-link" href="<%= page_path(@conn, :index) %>"><%= @current_user.name %></a></li>
+              <li class="nav-item"><%= link("sign out", to: session_path(@conn, :delete, @current_user.id), method: :delete, class: "nav-link", data: [confirm: "Really?"]) %></li>
             <% else %>
-              <li><a href="<%= user_path(@conn, :new) %>">register</a></li>
-              <li><a href="<%= session_path(@conn, :new) %>">sign in</a></li>
+              <li class="nav-item"><a class="nav-link" href="<%= user_path(@conn, :new) %>">register</a></li>
+              <li class="nav-item"><a class="nav-link" href="<%= session_path(@conn, :new) %>">sign in</a></li>
             <% end %>
           </ul>
-        </div><!--/.nav-collapse -->
+        </div>
       </div>
     </nav>
 
     <!-- Begin page content -->
     <div class="container">
-      <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
-      <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+      <%= if get_flash(@conn, :info) do %>
+        <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
+      <% end %>
+      <%= if get_flash(@conn, :error) do %>
+        <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+      <% end %>
 
       <%= render @view_module, @view_template, assigns %>
     </div>
@@ -59,6 +60,7 @@
       </div>
     </footer>
 
+    <script>window.userToken = "<%= @user_id %>";</script>
     <script src='<%= static_path(@conn, "/js/app.js") %>'></script>
   </body>
 </html>

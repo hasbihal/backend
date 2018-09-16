@@ -3,6 +3,7 @@ defmodule HasbihalWeb.UserSocket do
 
   ## Channels
   # channel "room:*", HasbihalWeb.RoomChannel
+  channel "room:lobby", HasbihalWeb.RoomChannel
 
   ## Transports
   transport(:websocket, Phoenix.Transports.WebSocket)
@@ -19,8 +20,21 @@ defmodule HasbihalWeb.UserSocket do
   #
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
-  def connect(_params, socket) do
-    {:ok, socket}
+  # def connect(_params, socket) do
+  #   {:ok, socket}
+  # end
+
+  def connect(%{"token" => user_id_token}, socket) do
+    case Phoenix.Token.verify(socket,
+                              "user_id",
+                              user_id_token,
+                              max_age: 1000000) do
+      {:ok, user_id} ->
+        {:ok, assign(socket, :user_id, user_id)}
+      {:error, _reason} ->
+        {:ok, socket}
+        # :error
+    end
   end
 
   # Socket id's are topics that allow you to identify all sockets for a given user:

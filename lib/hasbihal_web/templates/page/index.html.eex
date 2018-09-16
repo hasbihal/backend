@@ -6,3 +6,25 @@
   <% end %>
   <p>Let's pick a user for doing hasbihal as anonymously. 🤪</p>
 </div>
+
+<div class="row">
+  <%= for user <- @users do %>
+  <div class="col-md-4">
+    <div class="people-nearby">
+      <div class="nearby-user">
+        <div class="row">
+          <div class="col-md-auto">
+            <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="user" class="profile-photo">
+          </div>
+          <div class="col">
+            <h5><a href="#" class="profile-link"><%= user.name %></a></h5>
+          </div>
+          <div class="col-md-auto">
+            <a href="<%= room_path(@conn, :index, user.id) %>" class="btn btn-primary btn-sm">do hasbihal</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% end %>
+</div>

@@ -16,6 +16,7 @@ defmodule HasbihalWeb.Router do
   pipeline :auth do
     plug(Hasbihal.Auth.Pipeline)
     plug(Hasbihal.Auth.CurrentUser)
+    plug(:put_user_token)
   end
 
   pipeline :ensure_auth do
@@ -31,6 +32,8 @@ defmodule HasbihalWeb.Router do
 
     resources("/users", UserController, except: [:index, :show])
     resources("/sessions", SessionController, only: [:new, :create])
+
+    get("/rooms/:id", RoomController, :index)
   end
 
   scope "/", HasbihalWeb do
@@ -46,4 +49,16 @@ defmodule HasbihalWeb.Router do
   # scope "/api", HasbihalWeb do
   #   pipe_through :api
   # end
+
+  defp put_user_token(conn, _) do
+    if current_user = conn.assigns[:current_user] do
+      user_id_token = Phoenix.Token.sign(conn, "user_id", current_user.id)
+
+      conn
+      |> assign(:user_id, user_id_token)
+    else
+      conn
+      |> assign(:user_id, nil)
+    end
+  end
 end

@@ -1,0 +1,131 @@
+@import "bootstrap";
+
+/* Custom Stuff */
+
+/* This file is for your main application css. */
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  height: 100%;
+  min-height: 100%;
+}
+body {
+  height: calc(100% - 60px);
+  min-height: calc(100% - 60px);
+
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+
+  font-size: 14px;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  background-color: #f5f5f5;
+
+  text-align: center;
+}
+
+
+/* Custom page CSS
+-------------------------------------------------- */
+/* Not required for template or sticky footer method. */
+
+body > .container {
+  height: 100%;
+  min-height: 100%;
+
+  padding: 80px 15px;
+}
+.container .text-muted {
+  margin: 20px 0;
+}
+
+.footer > .container {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+code {
+  font-size: 80%;
+}
+
+/*==================================================
+  Nearby People CSS
+===================================================*/
+
+.people-nearby .nearby-user {
+  padding: 20px 0;
+  border-top: 1px solid #f1f2f2;
+  border-bottom: 1px solid #f1f2f2;
+  margin-bottom: 20px;
+}
+
+img.profile-photo {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+}
+
+/*==================================================
+  Chat Window CSS
+===================================================*/
+
+$grey: #e5e5ea;
+$blue: #1289fe;
+
+.chat_window {
+  position: relative;
+  height: 100%;
+  min-height: 100%;
+
+  .bottom_wrapper {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+  }
+
+  #messages {
+    li {
+      margin: 0 0 0.5em;
+      border-radius: 1em;
+      padding: 0.5em 1em;
+      background: $grey;
+      max-width: 75%;
+      clear: both;
+      position: relative;
+
+      &.them {
+
+        &::after {
+          content: "";
+          position: absolute;
+          left: -0.5em;
+          bottom: 0;
+          width: 0.5em;
+          height: 1em;
+        }
+      }
+
+      &.me {
+        background-color: $blue;
+        color: white;
+
+        &::after {
+          content: "";
+          position: absolute;
+          right: -0.5em;
+          bottom: 0;
+          width: 0.5em;
+          height: 1em;
+        }
+      }
+    }
+  }
+}
