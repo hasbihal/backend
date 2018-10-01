@@ -1,23 +1,20 @@
 defmodule Hasbihal.Auth.CurrentUser do
-  import Plug.Conn
+  @moduledoc false
 
-  alias Hasbihal.Users
-  alias Hasbihal.Users.User
+  import Plug.Conn
 
   def init(_params) do
   end
 
   def call(conn, _params) do
-    cond do
-      current_user = Guardian.Plug.current_resource(conn) ->
-        conn
-        |> assign(:current_user, current_user)
-        |> assign(:user_signed_in?, true)
-
-      true ->
-        conn
-        |> assign(:current_user, nil)
-        |> assign(:user_signed_in?, false)
+    if current_user = Guardian.Plug.current_resource(conn) do
+      conn
+      |> assign(:current_user, current_user)
+      |> assign(:user_signed_in?, true)
+    else
+      conn
+      |> assign(:current_user, nil)
+      |> assign(:user_signed_in?, false)
     end
   end
 end

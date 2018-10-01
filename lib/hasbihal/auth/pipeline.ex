@@ -1,4 +1,6 @@
 defmodule Hasbihal.Auth.Pipeline do
+  @moduledoc false
+
   use Guardian.Plug.Pipeline,
     otp_app: :hasbihal,
     module: Hasbihal.Guardian,

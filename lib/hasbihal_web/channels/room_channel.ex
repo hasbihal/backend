@@ -1,4 +1,6 @@
 defmodule HasbihalWeb.RoomChannel do
+  @moduledoc false
+
   use HasbihalWeb, :channel
 
   alias Hasbihal.Users
@@ -20,7 +22,7 @@ defmodule HasbihalWeb.RoomChannel do
   # It is also common to receive messages from the client and
   # broadcast to everyone in the current topic (room:lobby).
   def handle_in("shout", payload, socket) do
-    broadcast socket, "shout", payload
+    broadcast(socket, "shout", payload)
     {:noreply, socket}
   end
 
@@ -28,14 +30,13 @@ defmodule HasbihalWeb.RoomChannel do
     user_id = get_in(socket.assigns, [:user_id])
 
     username =
-      if !is_nil(user_id) do
-        Users.get_user!(user_id).name
-      else
+      if is_nil(user_id) do
         payload["sender"]
+      else
+        Users.get_user!(user_id).name
       end
 
-    broadcast! socket, "message:new", %{user: username,
-                                        message: payload["message"]}
+    broadcast!(socket, "message:new", %{user: username, message: payload["message"]})
 
     {:noreply, socket}
   end

@@ -1,9 +1,11 @@
 defmodule HasbihalWeb.UserSocket do
+  @moduledoc false
+
   use Phoenix.Socket
 
   ## Channels
   # channel "room:*", HasbihalWeb.RoomChannel
-  channel "room:lobby", HasbihalWeb.RoomChannel
+  channel("room:lobby", HasbihalWeb.RoomChannel)
 
   ## Transports
   transport(:websocket, Phoenix.Transports.WebSocket)
@@ -25,12 +27,15 @@ defmodule HasbihalWeb.UserSocket do
   # end
 
   def connect(%{"token" => user_id_token}, socket) do
-    case Phoenix.Token.verify(socket,
-                              "user_id",
-                              user_id_token,
-                              max_age: 1000000) do
+    case Phoenix.Token.verify(
+           socket,
+           "user_id",
+           user_id_token,
+           max_age: 1_000_000
+         ) do
       {:ok, user_id} ->
         {:ok, assign(socket, :user_id, user_id)}
+
       {:error, _reason} ->
         {:ok, socket}
         # :error

@@ -1,4 +1,6 @@
 defmodule Hasbihal.Mixfile do
+  @moduledoc false
+
   use Mix.Project
 
   def project do
@@ -6,11 +8,21 @@ defmodule Hasbihal.Mixfile do
       app: :hasbihal,
       version: "0.0.1",
       elixir: "~> 1.4",
-      elixirc_paths: elixirc_paths(Mix.env),
-      compilers: [:phoenix, :gettext] ++ Mix.compilers,
-      start_permanent: Mix.env == :prod,
+      elixirc_paths: elixirc_paths(Mix.env()),
+      compilers: [:phoenix, :gettext] ++ Mix.compilers(),
+      start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+
+      # Docs
+      name: "Hasbihal",
+      source_url: "https://github.com/hasbihal/backend",
+      homepage_url: "https://hasbihal.com",
+      docs: [
+        main: "Hasbihal", # The main page in the docs
+        # logo: "path/to/logo.png",
+        extras: ["README.md"]
+      ]
     ]
   end
 
@@ -26,7 +38,7 @@ defmodule Hasbihal.Mixfile do
 
   # Specifies which paths to compile per environment.
   defp elixirc_paths(:test), do: ["lib", "test/support"]
-  defp elixirc_paths(_),     do: ["lib"]
+  defp elixirc_paths(_), do: ["lib"]
 
   # Specifies your project dependencies.
   #
@@ -43,7 +55,9 @@ defmodule Hasbihal.Mixfile do
       {:cowboy, "~> 1.0"},
       {:bcrypt_elixir, "~> 1.0"},
       {:guardian, "~> 1.0"},
-      {:comeonin, "~> 4.0"}
+      {:comeonin, "~> 4.0"},
+      {:credo, "~> 0.8", only: [:dev, :test], runtime: false},
+      {:ex_doc, "~> 0.19", only: :dev, runtime: false}
     ]
   end
 
@@ -57,7 +71,14 @@ defmodule Hasbihal.Mixfile do
     [
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
-      "test": ["ecto.create --quiet", "ecto.migrate", "test"]
+      test: [
+        "format --check-formatted",
+        "credo --strict",
+        "ecto.create --quiet",
+        "ecto.migrate",
+        "test"
+      ],
+      check: "sobelow --verbose"
     ]
   end
 end

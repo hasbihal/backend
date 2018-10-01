@@ -6,7 +6,7 @@ defmodule HasbihalWeb.SessionController do
   alias Hasbihal.Users
   alias Hasbihal.Users.User
 
-  plug :redirect_if_signed_in when not action in [:delete]
+  plug(:redirect_if_signed_in when action not in [:delete])
 
   def new(conn, _params) do
     render(conn, "new.html")

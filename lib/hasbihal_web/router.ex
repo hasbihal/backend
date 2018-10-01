@@ -39,8 +39,6 @@ defmodule HasbihalWeb.Router do
   scope "/", HasbihalWeb do
     pipe_through([:browser, :auth, :ensure_auth])
 
-    get("/", PageController, :index)
-
     resources("/users", UserController, only: [:index, :show])
     resources("/sessions", SessionController, only: [:delete])
   end

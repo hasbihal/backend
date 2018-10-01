@@ -1,16 +1,18 @@
 defmodule Hasbihal.Guardian do
+  @moduledoc false
+
   use Guardian, otp_app: :hasbihal
 
   alias Hasbihal.Users
   alias Hasbihal.Users.User
 
-  def subject_for_token(user = %User{}, _claims) do
+  def subject_for_token(subject = %User{}, _claims) do
     # You can use any value for the subject of your token but
     # it should be useful in retrieving the resource later, see
     # how it being used on `resource_from_claims/1` function.
     # A unique `id` is a good subject, a non-unique email address
     # is a poor subject.
-    sub = to_string(user.id)
+    sub = to_string(subject.id)
     {:ok, sub}
   end
 
