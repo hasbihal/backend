@@ -64,13 +64,11 @@ defmodule HasbihalWeb.SessionController do
     end
   end
 
-  defp redirect_if_signed_in(conn, _params) do
-    if conn.assigns.user_signed_in? do
-      conn
-      |> put_flash(:info, "Already signed in!")
-      |> redirect(to: page_path(conn, :index))
-    else
-      conn
-    end
+  defp redirect_if_signed_in(%{assigns: %{user_signed_in?: true}} = conn, _params) do
+    conn
+    |> put_flash(:info, "Already signed in!")
+    |> redirect(to: page_path(conn, :index))
   end
+
+  defp redirect_if_signed_in(conn, _params), do: conn
 end
