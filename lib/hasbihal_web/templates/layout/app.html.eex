@@ -62,10 +62,5 @@
 
     <script>window.userToken = "<%= @user_id %>";</script>
     <script src='<%= static_path(@conn, "/js/app.js") %>'></script>
-    <%= if Mix.env == :dev do %>
-      <script src='http://localhost:8080/app.js'></script>
-    <% else %>
-      <script src="<%= static_path(@conn, '/js/app.js') %>"></script>
-    <% end %>
   </body>
 </html>

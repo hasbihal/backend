@@ -1,4 +1,4 @@
-@import "bootstrap";
+// @import "bootstrap";
 
 /* Custom Stuff */
 
@@ -77,55 +77,41 @@ img.profile-photo {
   Chat Window CSS
 ===================================================*/
 
-$grey: #e5e5ea;
-$blue: #1289fe;
-
 .chat_window {
   position: relative;
   height: 100%;
   min-height: 100%;
-
-  .bottom_wrapper {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-  }
-
-  #messages {
-    li {
-      margin: 0 0 0.5em;
-      border-radius: 1em;
-      padding: 0.5em 1em;
-      background: $grey;
-      max-width: 75%;
-      clear: both;
-      position: relative;
-
-      &.them {
-
-        &::after {
-          content: "";
-          position: absolute;
-          left: -0.5em;
-          bottom: 0;
-          width: 0.5em;
-          height: 1em;
-        }
-      }
-
-      &.me {
-        background-color: $blue;
-        color: white;
-
-        &::after {
-          content: "";
-          position: absolute;
-          right: -0.5em;
-          bottom: 0;
-          width: 0.5em;
-          height: 1em;
-        }
-      }
-    }
-  }
+}
+.chat_window .bottom_wrapper {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+.chat_window #messages li {
+  margin: 0 0 0.5em;
+  border-radius: 1em;
+  padding: 0.5em 1em;
+  max-width: 75%;
+  clear: both;
+  position: relative;
+}
+.chat_window #messages li.them::after {
+  content: "";
+  position: absolute;
+  left: -0.5em;
+  bottom: 0;
+  width: 0.5em;
+  height: 1em;
+}
+.chat_window #messages li.me {
+  background-color: lightblue;
+  color: white;
+}
+.chat_window #messages li.me::after {
+  content: "";
+  position: absolute;
+  right: -0.5em;
+  bottom: 0;
+  width: 0.5em;
+  height: 1em;
 }
