@@ -75,6 +75,7 @@ input.on("keypress", event => {
 });
 
 channel.on('message:new', payload => {
+  console.log(payload);
   $("#messages").append(`<li><b>${payload.user}</b>:
                         ${payload.message}</li>`);
 })
