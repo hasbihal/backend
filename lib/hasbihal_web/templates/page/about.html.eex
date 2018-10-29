@@ -1,0 +1,4 @@
+<div class="jumbotron">
+  <h2><%= gettext "Information for hasbihal" %></h2>
+  <p class="lead">This page includes a documentation for how to doing hasbihal...</p>
+</div>

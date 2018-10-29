@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Hello Hasbihal!</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href='<%= Routes.static_path(@conn, "/css/app.css") %>'>
+  </head>
+
+  <body>
+    <!-- Always shows a header, even in smaller screens. -->
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+      <header class="mdl-layout__header">
+        <div class="mdl-layout__header-row">
+          <span class="mdl-layout-title"><a href="<%= Routes.page_path(@conn, :index) %>">hasbihal</a></span>
+          <!-- Add spacer, to align navigation to the right -->
+          <div class="mdl-layout-spacer"></div>
+          <!-- Navigation. We hide it in small screens. -->
+          <nav class="mdl-navigation mdl-layout--large-screen-only">
+            <a class="mdl-navigation__link" href="">Link</a>
+            <a class="mdl-navigation__link" href="">Link</a>
+            <%= if @user_signed_in? do %>
+              <a class="mdl-navigation__link" href="<%= Routes.page_path(@conn, :index) %>"><%= @current_user.name %></a>
+              <%= link("sign out", to: Routes.session_path(@conn, :delete, @current_user.id), method: :delete, class: "mdl-navigation__link", data: [confirm: "Really?"]) %>
+            <% else %>
+              <a class="mdl-navigation__link" href="<%= Routes.user_path(@conn, :new) %>">register</a>
+              <a class="mdl-navigation__link" href="<%= Routes.session_path(@conn, :new) %>">sign in</a>
+            <% end %>
+          </nav>
+        </div>
+      </header>
+
+      <main class="mdl-layout__content">
+        <div class="page-content">
+          <%= if get_flash(@conn, :info) do %>
+            <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
+          <% end %>
+          <%= if get_flash(@conn, :error) do %>
+            <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+          <% end %>
+
+          <%= render @view_module, @view_template, assigns %>
+        </div>
+      </main>
+    </div>
+
+    <script>window.userToken = "<%= @user_id %>";</script>
+    <script src='<%= Routes.static_path(@conn, "/js/app.js") %>'></script>
+  </body>
+</html>
