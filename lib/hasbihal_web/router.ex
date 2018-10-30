@@ -2,15 +2,15 @@ defmodule HasbihalWeb.Router do
   use HasbihalWeb, :router
 
   pipeline :browser do
-    plug :accepts, ["html"]
-    plug :fetch_session
-    plug :fetch_flash
-    plug :protect_from_forgery
-    plug :put_secure_browser_headers
+    plug(:accepts, ["html"])
+    plug(:fetch_session)
+    plug(:fetch_flash)
+    plug(:protect_from_forgery)
+    plug(:put_secure_browser_headers)
   end
 
   pipeline :api do
-    plug :accepts, ["json"]
+    plug(:accepts, ["json"])
   end
 
   pipeline :auth do
@@ -24,7 +24,7 @@ defmodule HasbihalWeb.Router do
   end
 
   scope "/", HasbihalWeb do
-    pipe_through [:browser, :auth]
+    pipe_through([:browser, :auth])
 
     get("/", PageController, :index)
     get("/about", PageController, :about)

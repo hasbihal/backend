@@ -1,35 +1,40 @@
-<%= form_for @changeset, @action, fn f -> %>
-  <%= if @changeset.action do %>
-    <div class="alert alert-danger">
-      <p>Oops, something went wrong! Please check the errors below.</p>
+<div class="login-card mdl-card mdl-shadow--2dp">
+  <%= form_for @changeset, @action, fn f -> %>
+    <div class="mdl-card__title">
+      <h2 class="mdl-card__title-text">Register</h2>
+    </div>
+    <div class="mdl-card__supporting-text">
+      <div>
+        <%= if @changeset.action do %>
+          <div class="alert alert-danger">
+            <p>Oops, something went wrong! Please check the errors below.</p>
+          </div>
+        <% end %>
+      </div>
+
+      <div>
+        <%= input f, :name, using: :text_input %>
+        <%= error_tag f, :name %>
+      </div>
+
+      <div>
+        <%= input f, :email, using: :text_input %>
+        <%= error_tag f, :email %>
+      </div>
+
+      <div>
+        <%= input f, :password, using: :password_input %>
+        <%= error_tag f, :password %>
+      </div>
+
+      <div>
+        <%= input f, :password_confirmation, using: :password_input %>
+        <%= error_tag f, :password_confirmation %>
+      </div>
+
+      <div>
+        <%= submit "Submit", class: "mdl-button mdl-js-button mdl-button--raised mdl-button--colored" %>
+      </div>
     </div>
   <% end %>
-
-  <div class="form-group">
-    <%= label f, :name, class: "control-label" %>
-    <%= text_input f, :name, class: "form-control" %>
-    <%= error_tag f, :name %>
-  </div>
-
-  <div class="form-group">
-    <%= label f, :email, class: "control-label" %>
-    <%= text_input f, :email, class: "form-control" %>
-    <%= error_tag f, :email %>
-  </div>
-
-  <div class="form-group">
-    <%= label f, :password, class: "control-label" %>
-    <%= password_input f, :password, class: "form-control" %>
-    <%= error_tag f, :password %>
-  </div>
-
-  <div class="form-group">
-    <%= label f, :password_confirmation, class: "control-label" %>
-    <%= password_input f, :password_confirmation, class: "form-control" %>
-    <%= error_tag f, :password_confirmation %>
-  </div>
-
-  <div class="form-group">
-    <%= submit "Submit", class: "btn btn-primary" %>
-  </div>
-<% end %>
+</div>

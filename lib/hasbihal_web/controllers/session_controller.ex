@@ -3,6 +3,7 @@ defmodule HasbihalWeb.SessionController do
 
   import Comeonin.Bcrypt, only: [checkpw: 2, dummy_checkpw: 0]
 
+  alias Hasbihal.Guardian.Plug, as: GuardianPlug
   alias Hasbihal.Users
   alias Hasbihal.Users.User
 
@@ -23,7 +24,7 @@ defmodule HasbihalWeb.SessionController do
       {:ok, user} ->
         conn
         |> put_flash(:info, "Successfully signed in")
-        |> Hasbihal.Guardian.Plug.sign_in(user)
+        |> GuardianPlug.sign_in(user)
         |> redirect(to: Routes.page_path(conn, :index))
 
       {:error, _reason} ->
@@ -35,7 +36,7 @@ defmodule HasbihalWeb.SessionController do
 
   def delete(conn, _params) do
     conn
-    |> Hasbihal.Guardian.Plug.sign_out()
+    |> GuardianPlug.sign_out()
     |> put_flash(:info, "Successfully signed out")
     |> redirect(to: Routes.page_path(conn, :index))
   end

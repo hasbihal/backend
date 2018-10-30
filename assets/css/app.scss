@@ -1,5 +1,6 @@
 /* This file is for your main application css. */
 @import "./phoenix.css";
+@import "normalize";
 @import "~material-design-lite/dist/material.min.css";
 
 body {
@@ -14,4 +15,34 @@ body {
 
 .mdl-layout__header-row {
   padding-left: 40px !important;
+}
+
+.mdl-layout__content {
+  max-width: 1200px;
+  margin: 30px auto;
+}
+
+.login-card {
+  margin: 30px auto 0;
+  width: 96%;
+  max-width: 360px;
+}
+
+.chat_window {
+  min-width: 800px;
+
+  ul.messages {
+    margin: 0;
+    padding: 0;
+
+    li {
+      background: #eeee;
+      border-radius: 2px;
+      margin-bottom: 10px;
+    }
+  }
+
+  .mdl-textfield {
+    width: 100%;
+  }
 }

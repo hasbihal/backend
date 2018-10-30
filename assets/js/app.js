@@ -11,8 +11,9 @@ import css from "../css/app.scss"
 //
 import "phoenix_html"
 import "material-design-lite/material";
+import $ from 'jquery';
 
 // Import local files
 //
 // Local files can be imported directly using relative paths, for example:
-// import socket from "./socket"
+import socket from "./socket"

@@ -37,13 +37,6 @@
 
       <main class="mdl-layout__content">
         <div class="page-content">
-          <%= if get_flash(@conn, :info) do %>
-            <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
-          <% end %>
-          <%= if get_flash(@conn, :error) do %>
-            <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
-          <% end %>
-
           <%= render @view_module, @view_template, assigns %>
         </div>
       </main>
@@ -51,5 +44,26 @@
 
     <script>window.userToken = "<%= @user_id %>";</script>
     <script src='<%= Routes.static_path(@conn, "/js/app.js") %>'></script>
+
+    <%= if get_flash(@conn) do %>
+      <div id="notice" class="mdl-js-snackbar mdl-snackbar">
+        <div class="mdl-snackbar__text"></div>
+        <button class="mdl-snackbar__action" type="button"></button>
+      </div>
+      <script>
+        document.addEventListener('DOMContentLoaded', function () {
+          // fixme: why i need this timeout?
+          // do not forget this problem, MaterialSnackbar was not loaded when i wanted to show this
+          setTimeout(function () {
+            <%= for {_k, v} <- get_flash(@conn) do %>
+              bar = document.getElementById('notice').MaterialSnackbar;
+              bar.showSnackbar({
+                message: '<%= v %>'
+              });
+            <% end %>
+          }, 1000);
+        });
+      </script>
+    <% end %>
   </body>
 </html>

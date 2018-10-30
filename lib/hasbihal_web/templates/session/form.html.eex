@@ -1,17 +1,16 @@
-<%= form_for @conn, @action, [as: :session], fn f -> %>
-  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-    <%= label f, :email, class: "mdl-textfield__input" %>
-    <%= text_input f, :email, class: "mdl-textfield__input" %>
-    <%= error_tag f, :email %>
-  </div>
+<div class="login-card mdl-card mdl-shadow--2dp">
+  <%= form_for @conn, @action, [as: :session], fn f -> %>
+    <div class="mdl-card__title">
+      <h2 class="mdl-card__title-text">Login</h2>
+    </div>
+    <div class="mdl-card__supporting-text">
+      <%= input f, :email, using: :text_input %>
+      <%= input f, :password, using: :password_input %>
 
-  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-    <%= label f, :password, class: "mdl-textfield__input" %>
-    <%= password_input f, :password, class: "mdl-textfield__input" %>
-    <%= error_tag f, :password %>
-  </div>
+      <div>
+        <%= submit "Submit", class: "mdl-button mdl-js-button mdl-button--raised mdl-button--colored" %>
+      </div>
+    </div>
+  <% end %>
+</div>
 
-  <div>
-    <%= submit "Submit", class: "mdl-button mdl-js-button mdl-button--raised mdl-button--colored" %>
-  </div>
-<% end %>

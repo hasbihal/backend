@@ -8,8 +8,9 @@ defmodule Hasbihal.Auth.CurrentUser do
 
   def call(conn, _params) do
     current_user = Guardian.Plug.current_resource(conn)
+
     conn
-      |> assign(:current_user, current_user)
-      |> assign(:user_signed_in?, !is_nil(current_user))
+    |> assign(:current_user, current_user)
+    |> assign(:user_signed_in?, !is_nil(current_user))
   end
 end

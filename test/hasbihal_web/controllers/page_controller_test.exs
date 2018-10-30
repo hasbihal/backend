@@ -1,4 +1,5 @@
 defmodule HasbihalWeb.PageControllerTest do
+  @moduledoc false
   use HasbihalWeb.ConnCase
 
   test "GET /", %{conn: conn} do

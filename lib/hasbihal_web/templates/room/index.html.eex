@@ -1,9 +1,8 @@
 <div class="chat_window">
-  <ul class="list-unstyled" id="messages"></ul>
-  <div class="bottom_wrapper clearfix">
-    <div class="message_input_wrapper">
-      <input type="hidden" id="message_sender" value="anonym-<%= :crypto.strong_rand_bytes(6) |> Base.url_encode64 %>" />
-      <input class="message_input form-control" id="message_input" placeholder="Type your message here..." />
-    </div>
+  <ul class="messages mdl-list"></ul>
+
+  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+    <input class="mdl-textfield__input" type="text" id="message">
+    <label class="mdl-textfield__label" for="message">Type your message here...</label>
   </div>
 </div>

@@ -16,7 +16,8 @@ defmodule Hasbihal.MixProject do
       source_url: "https://github.com/hasbihal/backend",
       homepage_url: "https://hasbihal.com",
       docs: [
-        main: "Hasbihal", # The main page in the docs
+        # The main page in the docs
+        main: "Hasbihal",
         # logo: "path/to/logo.png",
         extras: ["README.md"]
       ]
