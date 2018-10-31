@@ -55,7 +55,7 @@ let socket = new Socket("/socket", {params: {token: window.userToken}})
 socket.connect()
 
 // Now that you are connected, you can join channels with a topic:
-let channel = socket.channel("room:lobby", {})
+let channel = socket.channel("chat:lobby", {})
 channel.join()
 .receive("ok", resp => { console.log("Joined successfully", resp) })
 .receive("error", resp => { console.log("Unable to join", resp) });
@@ -63,13 +63,22 @@ channel.join()
 let input = $("#message");
 input.focus();
 input.on("keypress", event => {
-  if (event.keyCode == 13) {
-    channel.push("message:new", {
-      message: input.val(),
-      sender: $("#message_sender").val()
-    });
+  if (event.keyCode === 13) {
+    if (input.val().length === 0) {
+      if (input.next('span.mdl-textfield__error').length === 0) {
+        input.after("<span class='mdl-textfield__error' id='error'>Please write somethings!</span>");
+      }
+      input.parent().addClass("is-invalid");
+    } else {
+      channel.push("message:new", {
+        message: input.val(),
+        sender: $("#message_sender").val()
+      });
 
-    input.val("");
+      input.val("");
+      input.parent().removeClass("is-invalid");
+      input.next("span.mdl-textfield__error").remove();
+    }
   }
 });
 
