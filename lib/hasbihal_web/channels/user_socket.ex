@@ -15,23 +15,18 @@ defmodule HasbihalWeb.UserSocket do
   #
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
-  def connect(_params, socket, _connect_info) do
-    {:ok, socket}
-  end
-
   def connect(%{"token" => user_id_token}, socket) do
     case Phoenix.Token.verify(
            socket,
            "user_id",
            user_id_token,
-           max_age: 1_000_000
+           max_age: 86_400
          ) do
       {:ok, user_id} ->
-        {:ok, assign(socket, :user_id, user_id)}
+        {:ok, assign(socket, :user, Hasbihal.Repo.get!(Hasbihal.Users.User, user_id))}
 
       {:error, _reason} ->
         {:ok, socket}
-        # :error
     end
   end
 

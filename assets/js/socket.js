@@ -6,9 +6,9 @@
 //
 // Pass the token on params as below. Or remove it
 // from the params if you are not using authentication.
-import {Socket} from "phoenix"
+import { Socket } from "phoenix"
 
-let socket = new Socket("/socket", {params: {token: window.userToken}})
+let socket = new Socket("/socket", { params: { token: window.userToken } })
 
 // When you connect, you'll often need to authenticate the client.
 // For example, imagine you have an authentication plug, `MyAuth`,
@@ -55,12 +55,17 @@ let socket = new Socket("/socket", {params: {token: window.userToken}})
 socket.connect()
 
 // Now that you are connected, you can join channels with a topic:
-let channel = socket.channel("chat:lobby", {})
+let channel = socket.channel("chat:lobby", { token: window.userToken })
+let input = $("#message");
+
 channel.join()
 .receive("ok", resp => { console.log("Joined successfully", resp) })
-.receive("error", resp => { console.log("Unable to join", resp) });
+.receive("error", resp => {
+  console.error("Connection failed! Because of ", resp)
+  input.prop("disabled", true);
+  input.next('label').text(`${resp.reason}`);
+});
 
-let input = $("#message");
 input.focus();
 input.on("keypress", event => {
   if (event.keyCode === 13) {
@@ -71,8 +76,7 @@ input.on("keypress", event => {
       input.parent().addClass("is-invalid");
     } else {
       channel.push("message:new", {
-        message: input.val(),
-        sender: $("#message_sender").val()
+        message: input.val()
       });
 
       input.val("");
@@ -83,7 +87,6 @@ input.on("keypress", event => {
 });
 
 channel.on('message:new', payload => {
-  console.log(payload);
   input.closest('.chat_window').find('.messages').append(`<li class="mdl-list__item">
     <span class="mdl-list__item-primary-content">
       <strong>${payload.user}</strong>:
