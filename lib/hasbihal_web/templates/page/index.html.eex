@@ -1,17 +1,8 @@
-<div class="demo-card-wide mdl-card mdl-shadow--2dp" style="width: 100%">
-  <div class="mdl-card__title">
-    <h2 class="mdl-card__title-text">
-      <%= if @current_user do %>
-        <h2><%= gettext "Hello %{name}, welcome to hasbihal!", name: @current_user.name %></h2>
-      <% else %>
-        <h2><%= gettext "Welcome to hasbihal!" %></h2>
-      <% end %>
-    </h2>
-  </div>
-  <div class="mdl-card__supporting-text">
-    Let's pick a user for doing hasbihal as anonymously. 🤪
-  </div>
-</div>
+<%= if @current_user do %>
+  <h2><%= gettext "Hello %{name}, welcome to hasbihal!", name: @current_user.name %></h2>
+<% else %>
+  <h2><%= gettext "Welcome to hasbihal!" %></h2>
+<% end %>
 
 <div class="mdl-grid">
   <ul class="demo-list-control mdl-list">

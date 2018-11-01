@@ -1,12 +1,15 @@
 defmodule HasbihalWeb.UserController do
   use HasbihalWeb, :controller
 
+  import Ecto.Query, only: [from: 2]
   alias Hasbihal.Guardian.Plug, as: GuardianPlug
-  alias Hasbihal.Users
-  alias Hasbihal.Users.User
+  alias Hasbihal.{Repo, Users, Users.User}
 
   def index(conn, _params) do
-    render(conn, "index.html")
+    %{id: current_user_id} = get_in(conn.assigns, [:current_user])
+
+    users = Repo.all(from u in User, where: u.id != ^current_user_id)
+    render(conn, "index.html", users: users)
   end
 
   def new(conn, _params) do

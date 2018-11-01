@@ -1,10 +1,13 @@
 defmodule HasbihalWeb.PageController do
   use HasbihalWeb, :controller
 
-  alias Hasbihal.Users
+  import Ecto.Query, only: [from: 2]
+  alias Hasbihal.{Repo, Users.User}
 
   def index(conn, _params) do
-    users = Users.list_users()
+    %{id: current_user_id} = get_in(conn.assigns, [:current_user])
+
+    users = Repo.all(from u in User, where: u.id != ^current_user_id)
     render(conn, "index.html", users: users)
   end
 
