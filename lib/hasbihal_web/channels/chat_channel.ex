@@ -1,13 +1,30 @@
 defmodule HasbihalWeb.ChatChannel do
   @moduledoc false
   use HasbihalWeb, :channel
+  alias HasbihalWeb.Presence
 
   def join("chat:lobby", payload, socket) do
     if authorized?(payload) do
+      send(self(), :after_join)
       {:ok, socket}
     else
       {:error, %{reason: "unauthorized"}}
     end
+  end
+
+  def join("chat:" <> private_topic_key, payload, socket) do
+    if authorized?(payload) do
+      send(self(), :after_join)
+      {:ok, socket}
+    else
+      {:error, %{reason: "unauthorized"}}
+    end
+  end
+
+  def handle_info(:after_join, socket) do
+    push socket, "presence_state", Presence.list(socket)
+    {:ok, _} = Presence.track(socket, socket.assigns.user.id)
+    {:noreply, socket}
   end
 
   # Channels can be used in a request/response fashion

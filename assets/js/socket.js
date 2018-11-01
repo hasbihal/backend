@@ -52,46 +52,50 @@ let socket = new Socket("/socket", { params: { token: window.userToken } })
 //     end
 //
 // Finally, connect to the socket:
-socket.connect()
-
-// Now that you are connected, you can join channels with a topic:
-let channel = socket.channel("chat:lobby", { token: window.userToken })
 let input = $("#message");
 
-channel.join()
-.receive("ok", resp => { console.log("Joined successfully", resp) })
-.receive("error", resp => {
-  console.error("Connection failed! Because of ", resp)
-  input.prop("disabled", true);
-  input.next('label').text(`${resp.reason}`);
-});
+if (input.length > 0) {
+  socket.connect()
 
-input.focus();
-input.on("keypress", event => {
-  if (event.keyCode === 13) {
-    if (input.val().length === 0) {
-      if (input.next('span.mdl-textfield__error').length === 0) {
-        input.after("<span class='mdl-textfield__error' id='error'>Please write somethings!</span>");
+  // Now that you are connected, you can join channels with a topic:
+  let channel = socket.channel("chat:lobby", { token: window.userToken })
+
+  channel.join()
+  .receive("ok", resp => { console.log("Joined successfully", resp) })
+  .receive("error", resp => {
+    console.error("Connection failed! Because of ", resp)
+    input.prop("disabled", true);
+    input.next('label').text(`${resp.reason}`);
+  });
+
+  input.focus();
+  input.on("keypress", event => {
+    if (event.keyCode === 13) {
+      if (input.val().length === 0) {
+        if (input.next('span.mdl-textfield__error').length === 0) {
+          input.after("<span class='mdl-textfield__error' id='error'>Please write somethings!</span>");
+        }
+        input.parent().addClass("is-invalid");
+      } else {
+        channel.push("message:new", {
+          message: input.val()
+        });
+
+        input.val("");
+        input.parent().removeClass("is-invalid");
+        input.next("span.mdl-textfield__error").remove();
       }
-      input.parent().addClass("is-invalid");
-    } else {
-      channel.push("message:new", {
-        message: input.val()
-      });
-
-      input.val("");
-      input.parent().removeClass("is-invalid");
-      input.next("span.mdl-textfield__error").remove();
     }
-  }
-});
+  });
 
-channel.on('message:new', payload => {
-  input.closest('.chat_window').find('.messages').append(`<li class="mdl-list__item">
-    <span class="mdl-list__item-primary-content">
-      <strong>${payload.user}</strong>:
-      ${payload.message}
-    </span>
-  </li>`);
-})
+  channel.on('message:new', payload => {
+    input.closest('.chat_window').find('.messages').append(`<li class="mdl-list__item">
+      <span class="mdl-list__item-primary-content">
+        <strong>${payload.user}</strong>:
+        ${payload.message}
+      </span>
+    </li>`);
+  })
+}
+
 export default socket
