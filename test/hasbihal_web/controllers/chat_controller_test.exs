@@ -1,4 +1,4 @@
-defmodule HasbihalWeb.RoomControllerTest do
+defmodule HasbihalWeb.ChatControllerTest do
   @moduledoc false
   use HasbihalWeb.ConnCase
 

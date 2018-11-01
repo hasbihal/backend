@@ -1,5 +1,6 @@
 defmodule HasbihalWeb.UserSocket do
   use Phoenix.Socket
+  alias Hasbihal.Users
 
   ## Channels
   channel("chat:*", HasbihalWeb.ChatChannel)
@@ -15,16 +16,10 @@ defmodule HasbihalWeb.UserSocket do
   #
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
-  def connect(%{"token" => user_id_token}, socket) do
-    case Phoenix.Token.verify(
-           socket,
-           "user_id",
-           user_id_token,
-           max_age: 86_400
-         ) do
+  def connect(%{"token" => token}, socket) do
+    case Phoenix.Token.verify(socket, "user_id", token, max_age: 7200) do
       {:ok, user_id} ->
-        {:ok, assign(socket, :user, Hasbihal.Repo.get!(Hasbihal.Users.User, user_id))}
-
+        {:ok, assign(socket, :user, Users.get_user!(user_id) |> Map.take([:id, :name]))}
       {:error, _reason} ->
         {:ok, socket}
     end

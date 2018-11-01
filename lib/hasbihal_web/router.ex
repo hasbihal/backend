@@ -32,7 +32,6 @@ defmodule HasbihalWeb.Router do
     resources("/users", UserController, except: [:index, :show])
     resources("/sessions", SessionController, only: [:new, :create])
 
-    # get("/rooms/:id", RoomController, :index)
     get("/chat/:id", ChatController, :index)
   end
 
