@@ -23,7 +23,9 @@ defmodule HasbihalWeb.ChatChannel do
 
   def handle_info(:after_join, socket) do
     push socket, "presence_state", Presence.list(socket)
-    {:ok, _} = Presence.track(socket, socket.assigns.user.id)
+    {:ok, _} = Presence.track(socket, socket.assigns.user.id, %{
+      online_at: inspect(System.system_time(:seconds))
+    })
     {:noreply, socket}
   end
 
