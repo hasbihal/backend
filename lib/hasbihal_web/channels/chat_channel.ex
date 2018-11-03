@@ -48,6 +48,7 @@ defmodule HasbihalWeb.ChatChannel do
     {:noreply, socket}
   end
 
-  defp authorized?(%{token: token}) when token == "" do IO.inspect(token) end
-  defp authorized?(_payload) do true end
+  defp authorized?(%{"token" => token} = _payload) do
+    if (String.length(token) > 0), do: true, else: false
+  end
 end

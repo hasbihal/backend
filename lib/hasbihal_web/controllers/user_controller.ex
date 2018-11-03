@@ -6,9 +6,12 @@ defmodule HasbihalWeb.UserController do
   alias Hasbihal.{Repo, Users, Users.User}
 
   def index(conn, _params) do
-    %{id: current_user_id} = get_in(conn.assigns, [:current_user])
-
-    users = Repo.all(from u in User, where: u.id != ^current_user_id)
+    users =
+      if current_user = conn.assigns[:current_user] do
+        Repo.all(from u in User, where: u.id != ^current_user.id)
+      else
+        Users.list_users
+      end
     render(conn, "index.html", users: users)
   end
 

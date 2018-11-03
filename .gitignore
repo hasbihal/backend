@@ -41,6 +41,9 @@ npm-debug.log
 # variables.
 /config/*.secret.exs
 
+# Elixir Language Server files
+/.elixir_ls
+
 # Environment files
 .env
 
