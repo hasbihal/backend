@@ -1,0 +1,6 @@
+<h2><%= @user.name %></h2>
+
+<a class="mdl-button mdl-js-button"
+   href="<%= Routes.conversation_path(@conn, :index, uid: @user.id) %>">
+  <i class="material-icons">chat</i> hasbihal
+</a>

@@ -33,9 +33,10 @@ defmodule HasbihalWeb.UserController do
     end
   end
 
-  # def show(conn, _params) do
-  #   render(conn, "show.html")
-  # end
+  def show(conn, %{"id" => id}) do
+    user = Users.get_user!(id)
+    render(conn, "show.html", user: user)
+  end
 
   # def edit(conn, %{"id" => id}) do
   #   user = Users.get_user!(id)

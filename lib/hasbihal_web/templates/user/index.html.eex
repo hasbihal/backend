@@ -6,13 +6,7 @@
     <li class="mdl-list__item" style="float: left; min-width: 240px">
       <span class="mdl-list__item-primary-content">
         <i class="material-icons mdl-list__item-avatar">person</i>
-        <a href="<%= Routes.chat_path(@conn, :index, user.id) %>"><%= user.name %></a>
-      </span>
-      <span class="mdl-list__item-secondary-action">
-        <a class="mdl-button mdl-js-button mdl-button--icon"
-           href="<%= Routes.chat_path(@conn, :index, user.id) %>">
-          <i class="material-icons">chat</i>
-        </a>
+        <a href="<%= Routes.user_path(@conn, :show, user.id) %>"><%= user.name %></a>
       </span>
     </li>
   <% end %>
