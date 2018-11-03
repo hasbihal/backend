@@ -12,7 +12,7 @@ defmodule HasbihalWeb.ChatChannel do
     end
   end
 
-  def join("chat:" <> private_topic_key, payload, socket) do
+  def join("chat:" <> _private_topic_key, payload, socket) do
     if authorized?(payload) do
       send(self(), :after_join)
       {:ok, socket}
@@ -48,11 +48,6 @@ defmodule HasbihalWeb.ChatChannel do
     {:noreply, socket}
   end
 
-  defp authorized?(payload) do
-    if Map.get(payload, "token") != "" do
-      true
-    else
-      false
-    end
-  end
+  defp authorized?(%{token: token}) when token == "" do IO.inspect(token) end
+  defp authorized?(_payload) do true end
 end
