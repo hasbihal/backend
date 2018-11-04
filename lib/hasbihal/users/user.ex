@@ -33,8 +33,10 @@ defmodule Hasbihal.Users.User do
     |> unique_constraint(:email)
   end
 
+  @doc false
   defp encrypt_password(%{valid?: false} = changeset), do: changeset
 
+  @doc false
   defp encrypt_password(%{valid?: true} = changeset) do
     encrypted_password =
       changeset

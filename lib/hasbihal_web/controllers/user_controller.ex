@@ -1,10 +1,12 @@
 defmodule HasbihalWeb.UserController do
+  @moduledoc false
   use HasbihalWeb, :controller
 
   import Ecto.Query, only: [from: 2]
   alias Hasbihal.Guardian.Plug, as: GuardianPlug
   alias Hasbihal.{Repo, Users, Users.User}
 
+  @doc false
   def index(conn, _params) do
     users =
       if current_user = conn.assigns[:current_user] do
@@ -16,11 +18,13 @@ defmodule HasbihalWeb.UserController do
     render(conn, "index.html", users: users)
   end
 
+  @doc false
   def new(conn, _params) do
     changeset = Users.change_user(%User{})
     render(conn, "new.html", changeset: changeset)
   end
 
+  @doc false
   def create(conn, %{"user" => user_params}) do
     case Users.create_user(user_params) do
       {:ok, user} ->
@@ -34,17 +38,20 @@ defmodule HasbihalWeb.UserController do
     end
   end
 
+  @doc false
   def show(conn, %{"id" => id}) do
     user = Users.get_user!(id)
     render(conn, "show.html", user: user)
   end
 
+  @doc false
   # def edit(conn, %{"id" => id}) do
   #   user = Users.get_user!(id)
   #   changeset = Users.change_user(user)
   #   render(conn, "edit.html", user: user, changeset: changeset)
   # end
 
+  @doc false
   # def update(conn, %{"id" => id, "user" => user_params}) do
   #   user = Users.get_user!(id)
 
@@ -59,6 +66,7 @@ defmodule HasbihalWeb.UserController do
   #   end
   # end
 
+  @doc false
   # def delete(conn, %{"id" => id}) do
   #   user = Users.get_user!(id)
   #   {:ok, _user} = Users.delete_user(user)

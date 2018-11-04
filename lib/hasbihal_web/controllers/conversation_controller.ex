@@ -1,4 +1,5 @@
 defmodule HasbihalWeb.ConversationController do
+  @moduledoc false
   use HasbihalWeb, :controller
 
   import Ecto.Query, only: [from: 2]
@@ -6,6 +7,7 @@ defmodule HasbihalWeb.ConversationController do
   alias Hasbihal.Repo
   alias Hasbihal.{Conversations, Conversations.Conversation, Users.User}
 
+  @doc false
   def index(conn, params) do
     if uid = get_in(params, ["uid"]) do
       users = [uid, conn.assigns[:current_user].id]
@@ -26,16 +28,19 @@ defmodule HasbihalWeb.ConversationController do
     end
   end
 
+  @doc false
   def show(conn, %{"id" => id}) do
     conversation = Conversations.get_conversation!(id)
     render(conn, "show.html", conversation: conversation)
   end
 
+  @doc false
   def messages(conn, %{"key" => key}) do
     conversation = Conversations.get_conversation_by_key!(key)
     render(conn, "show.html", conversation: conversation)
   end
 
+  @doc false
   defp get_conversations_for(cuid, uid) do
     Repo.all(
       from(c in Conversation,
@@ -48,6 +53,7 @@ defmodule HasbihalWeb.ConversationController do
     )
   end
 
+  @doc false
   defp create_new_conversation_for(users) do
     key = :crypto.strong_rand_bytes(24) |> Base.url_encode64() |> binary_part(0, 24)
 

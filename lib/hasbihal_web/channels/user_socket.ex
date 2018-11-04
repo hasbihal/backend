@@ -1,4 +1,5 @@
 defmodule HasbihalWeb.UserSocket do
+  @moduledoc false
   use Phoenix.Socket
   alias Hasbihal.Users
 

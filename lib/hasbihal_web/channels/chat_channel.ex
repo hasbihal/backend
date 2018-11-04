@@ -3,6 +3,7 @@ defmodule HasbihalWeb.ChatChannel do
   use HasbihalWeb, :channel
   alias HasbihalWeb.Presence
 
+  @doc false
   def join("chat:lobby", payload, socket) do
     if authorized?(payload) do
       send(self(), :after_join)
@@ -12,6 +13,7 @@ defmodule HasbihalWeb.ChatChannel do
     end
   end
 
+  @doc false
   def join("chat:" <> _private_topic_key, payload, socket) do
     if authorized?(payload) do
       send(self(), :after_join)
@@ -21,6 +23,7 @@ defmodule HasbihalWeb.ChatChannel do
     end
   end
 
+  @doc false
   def handle_info(:after_join, socket) do
     push(socket, "presence_state", Presence.list(socket))
 
@@ -45,12 +48,14 @@ defmodule HasbihalWeb.ChatChannel do
     {:noreply, socket}
   end
 
+  @doc false
   def handle_in("message:new", payload, socket) do
     user = get_in(socket.assigns, [:user])
     broadcast!(socket, "message:new", %{user: user.name, message: payload["message"]})
     {:noreply, socket}
   end
 
+  @doc false
   defp authorized?(%{"token" => token} = _payload) do
     if String.length(token) > 0, do: true, else: false
   end
