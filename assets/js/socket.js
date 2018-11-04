@@ -6,9 +6,10 @@
 //
 // Pass the token on params as below. Or remove it
 // from the params if you are not using authentication.
-import { Socket } from "phoenix"
+import { Socket, Presence } from "phoenix";
+import _ from "lodash";
 
-let socket = new Socket("/socket", { params: { token: window.userToken, conversation: window.conversationKey } })
+let socket = new Socket("/socket", { params: { token: window.userToken, conversation: window.conversationKey } });
 
 // When you connect, you'll often need to authenticate the client.
 // For example, imagine you have an authentication plug, `MyAuth`,
@@ -55,10 +56,10 @@ let socket = new Socket("/socket", { params: { token: window.userToken, conversa
 let input = $("#message");
 
 if (input.length > 0) {
-  socket.connect()
+  socket.connect();
 
   // Now that you are connected, you can join channels with a topic:
-  let channel = socket.channel(`chat:${window.conversationKey}`, { token: window.userToken })
+  let channel = socket.channel(`chat:${window.conversationKey}`, { token: window.userToken });
 
   channel.join()
   .receive("ok", resp => { console.log("Joined successfully", resp) })
@@ -73,7 +74,7 @@ if (input.length > 0) {
     if (event.keyCode === 13) {
       if (input.val().length === 0) {
         if (input.next('span.mdl-textfield__error').length === 0) {
-          input.after("<span class='mdl-textfield__error' id='error'>Please write somethings!</span>");
+          input.after("<span class='mdl-textfield__error' id='error'>Please write something!</span>");
         }
         input.parent().addClass("is-invalid");
       } else {
@@ -95,6 +96,28 @@ if (input.length > 0) {
         ${payload.message}
       </span>
     </li>`);
+  });
+
+  let presences = []
+  let participants = []
+  channel.on("presence_diff", resp => {
+    presences = Presence.syncDiff(presences, resp);
+
+    _.each(Presence.list(presences), p => {
+      const participant = _.get(p, 'metas[0]');
+      participants.push(participant);
+    });
+
+    participants = _.uniqBy(_.compact(participants), 'name');
+
+    const chips = _.map(participants, p => {
+      return `<span class="mdl-chip mdl-chip--contact" style="margin-right: 10px">
+        <span class="mdl-chip__contact mdl-color--teal mdl-color-text--white">${p.name[0].toUpperCase()}</span>
+        <span class="mdl-chip__text">${p.name}</span>
+      </span>`
+    }).join("");
+
+    $('#chips').html(chips);
   })
 }
 

@@ -7,6 +7,9 @@
     <input class="mdl-textfield__input" type="text" id="message">
     <label class="mdl-textfield__label" for="message">Send a message...</label>
   </div>
+
+  online users:
+  <div id="chips"></div>
 </div>
 
 <script>window.conversationKey = "<%= @conversation.key %>";</script>

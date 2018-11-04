@@ -29,6 +29,8 @@ defmodule HasbihalWeb.ChatChannel do
 
     {:ok, _} =
       Presence.track(socket, socket.assigns.user.id, %{
+        typing: false,
+        name: socket.assigns.user.name,
         online_at: inspect(System.system_time(:seconds))
       })
 

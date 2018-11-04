@@ -55,7 +55,7 @@ defmodule HasbihalWeb.ConversationController do
 
   @doc false
   defp create_new_conversation_for(users) do
-    key = :crypto.strong_rand_bytes(24) |> Base.url_encode64() |> binary_part(0, 24)
+    key = :crypto.strong_rand_bytes(24) |> Base.url_encode64(padding: false) |> binary_part(0, 24)
 
     users = Repo.all(from(u in User, where: u.id in ^users))
 
