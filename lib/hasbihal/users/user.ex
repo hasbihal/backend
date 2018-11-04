@@ -14,7 +14,9 @@ defmodule Hasbihal.Users.User do
     field(:password_confirmation, :string, virtual: true)
 
     # has_many :conversations, {"conversations_participants", Conversation}, foreign_key: :conversation_id
-    many_to_many :conversations, Hasbihal.Conversations.Conversation, join_through: "conversations_participants"
+    many_to_many(:conversations, Hasbihal.Conversations.Conversation,
+      join_through: "conversations_participants"
+    )
 
     timestamps()
   end

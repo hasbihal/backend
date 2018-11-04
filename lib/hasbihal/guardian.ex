@@ -27,5 +27,7 @@ defmodule Hasbihal.Guardian do
     {:ok, resource}
   end
 
-  def resource_from_claims(%{}) do {:error, "Unknown resource type"} end
+  def resource_from_claims(%{}) do
+    {:error, "Unknown resource type"}
+  end
 end

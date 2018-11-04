@@ -1,8 +1,0 @@
-<div class="chat_window">
-  <ul class="messages mdl-list"></ul>
-
-  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-    <input class="mdl-textfield__input" type="text" id="message">
-    <label class="mdl-textfield__label" for="message">Send a message to <%= @user.name %>...</label>
-  </div>
-</div>

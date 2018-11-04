@@ -8,6 +8,5 @@ defmodule Hasbihal.Repo.Migrations.CreateConversations do
 
       timestamps()
     end
-
   end
 end

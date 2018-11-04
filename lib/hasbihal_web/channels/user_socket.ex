@@ -20,6 +20,7 @@ defmodule HasbihalWeb.UserSocket do
     case Phoenix.Token.verify(socket, "user_id", token, max_age: 7200) do
       {:ok, user_id} ->
         {:ok, assign(socket, :user, Users.get_user!(user_id) |> Map.take([:id, :name]))}
+
       {:error, _reason} ->
         {:ok, socket}
     end
