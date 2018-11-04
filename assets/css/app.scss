@@ -28,6 +28,11 @@ body {
   max-width: 360px;
 }
 
+input:disabled {
+  cursor: not-allowed;
+  background-color: #eee !important;
+}
+
 .chat_window {
   min-width: 800px;
 

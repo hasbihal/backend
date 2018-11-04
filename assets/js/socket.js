@@ -6,9 +6,9 @@
 //
 // Pass the token on params as below. Or remove it
 // from the params if you are not using authentication.
-import {Socket} from "phoenix"
+import { Socket } from "phoenix"
 
-let socket = new Socket("/socket", {params: {token: window.userToken}})
+let socket = new Socket("/socket", { params: { token: window.userToken, conversation: window.conversationKey } })
 
 // When you connect, you'll often need to authenticate the client.
 // For example, imagine you have an authentication plug, `MyAuth`,
@@ -52,34 +52,50 @@ let socket = new Socket("/socket", {params: {token: window.userToken}})
 //     end
 //
 // Finally, connect to the socket:
-socket.connect()
-
-// Now that you are connected, you can join channels with a topic:
-let channel = socket.channel("room:lobby", {})
-channel.join()
-.receive("ok", resp => { console.log("Joined successfully", resp) })
-.receive("error", resp => { console.log("Unable to join", resp) });
-
 let input = $("#message");
-input.focus();
-input.on("keypress", event => {
-  if (event.keyCode == 13) {
-    channel.push("message:new", {
-      message: input.val(),
-      sender: $("#message_sender").val()
-    });
 
-    input.val("");
-  }
-});
+if (input.length > 0) {
+  socket.connect()
 
-channel.on('message:new', payload => {
-  console.log(payload);
-  input.closest('.chat_window').find('.messages').append(`<li class="mdl-list__item">
-    <span class="mdl-list__item-primary-content">
-      <strong>${payload.user}</strong>:
-      ${payload.message}
-    </span>
-  </li>`);
-})
+  // Now that you are connected, you can join channels with a topic:
+  let channel = socket.channel(`chat:${window.conversationKey}`, { token: window.userToken })
+
+  channel.join()
+  .receive("ok", resp => { console.log("Joined successfully", resp) })
+  .receive("error", resp => {
+    console.error("Connection failed! Because of ", resp)
+    input.prop("disabled", true);
+    input.next('label').text(`${resp.reason}`);
+  });
+
+  input.focus();
+  input.on("keypress", event => {
+    if (event.keyCode === 13) {
+      if (input.val().length === 0) {
+        if (input.next('span.mdl-textfield__error').length === 0) {
+          input.after("<span class='mdl-textfield__error' id='error'>Please write somethings!</span>");
+        }
+        input.parent().addClass("is-invalid");
+      } else {
+        channel.push("message:new", {
+          message: input.val()
+        });
+
+        input.val("");
+        input.parent().removeClass("is-invalid");
+        input.next("span.mdl-textfield__error").remove();
+      }
+    }
+  });
+
+  channel.on('message:new', payload => {
+    input.closest('.chat_window').find('.messages').append(`<li class="mdl-list__item">
+      <span class="mdl-list__item-primary-content">
+        <strong>${payload.user}</strong>:
+        ${payload.message}
+      </span>
+    </li>`);
+  })
+}
+
 export default socket

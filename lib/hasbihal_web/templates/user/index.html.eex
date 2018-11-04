@@ -1,1 +1,13 @@
 <h2>List of User</h2>
+
+<div class="mdl-grid">
+  <ul class="demo-list-control mdl-list">
+  <%= for user <- @users do %>
+    <li class="mdl-list__item" style="float: left; min-width: 240px">
+      <span class="mdl-list__item-primary-content">
+        <i class="material-icons mdl-list__item-avatar">person</i>
+        <a href="<%= Routes.user_path(@conn, :show, user.id) %>"><%= user.name %></a>
+      </span>
+    </li>
+  <% end %>
+</div>

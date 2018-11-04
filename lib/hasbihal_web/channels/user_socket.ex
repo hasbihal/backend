@@ -1,8 +1,9 @@
 defmodule HasbihalWeb.UserSocket do
   use Phoenix.Socket
+  alias Hasbihal.Users
 
   ## Channels
-  channel("room:*", HasbihalWeb.RoomChannel)
+  channel("chat:*", HasbihalWeb.ChatChannel)
 
   # Socket params are passed from the client and can
   # be used to verify and authenticate a user. After
@@ -15,23 +16,13 @@ defmodule HasbihalWeb.UserSocket do
   #
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
-  def connect(_params, socket, _connect_info) do
-    {:ok, socket}
-  end
-
-  def connect(%{"token" => user_id_token}, socket) do
-    case Phoenix.Token.verify(
-           socket,
-           "user_id",
-           user_id_token,
-           max_age: 1_000_000
-         ) do
+  def connect(%{"token" => token}, socket) do
+    case Phoenix.Token.verify(socket, "user_id", token, max_age: 7200) do
       {:ok, user_id} ->
-        {:ok, assign(socket, :user_id, user_id)}
+        {:ok, assign(socket, :user, Users.get_user!(user_id) |> Map.take([:id, :name]))}
 
       {:error, _reason} ->
         {:ok, socket}
-        # :error
     end
   end
 

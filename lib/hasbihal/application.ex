@@ -11,9 +11,11 @@ defmodule Hasbihal.Application do
       # Start the Ecto repository
       Hasbihal.Repo,
       # Start the endpoint when the application starts
-      HasbihalWeb.Endpoint
+      HasbihalWeb.Endpoint,
       # Starts a worker by calling: Hasbihal.Worker.start_link(arg)
       # {Hasbihal.Worker, arg},
+
+      HasbihalWeb.Presence
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

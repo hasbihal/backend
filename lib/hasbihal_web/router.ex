@@ -32,7 +32,8 @@ defmodule HasbihalWeb.Router do
     resources("/users", UserController, except: [:index, :show])
     resources("/sessions", SessionController, only: [:new, :create])
 
-    get("/rooms/:id", RoomController, :index)
+    # get("/chat/:key", ChatController, :show)
+    # get("/chat/:id/start", ChatController, :index)
   end
 
   scope "/", HasbihalWeb do
@@ -40,6 +41,8 @@ defmodule HasbihalWeb.Router do
 
     resources("/users", UserController, only: [:index, :show])
     resources("/sessions", SessionController, only: [:delete])
+    resources("/conversations", ConversationController, only: [:index, :show])
+    get("/messages/:key", ConversationController, :messages, as: :message)
   end
 
   # Other scopes may use custom stacks.

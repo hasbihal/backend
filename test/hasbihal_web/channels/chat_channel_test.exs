@@ -1,13 +1,11 @@
-defmodule HasbihalWeb.RoomChannelTest do
+defmodule HasbihalWeb.ChatChannelTest do
   @moduledoc false
   use HasbihalWeb.ChannelCase
 
-  alias HasbihalWeb.RoomChannel
-
   setup do
     {:ok, _, socket} =
-      socket("user_id", %{some: :assign})
-      |> subscribe_and_join(RoomChannel, "room:lobby")
+      socket(HasbihalWeb.UserSocket, "user_id", %{some: :assign})
+      |> subscribe_and_join(HasbihalWeb.ChatChannel, "chat:lobby")
 
     {:ok, socket: socket}
   end
@@ -17,7 +15,7 @@ defmodule HasbihalWeb.RoomChannelTest do
     assert_reply(ref, :ok, %{"hello" => "there"})
   end
 
-  test "shout broadcasts to room:lobby", %{socket: socket} do
+  test "shout broadcasts to chat:lobby", %{socket: socket} do
     push(socket, "shout", %{"hello" => "all"})
     assert_broadcast("shout", %{"hello" => "all"})
   end
