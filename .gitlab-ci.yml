@@ -2,6 +2,7 @@ image: elixir:latest
 
 services:
   - postgres:latest
+
 variables:
   POSTGRES_DB: hasbihal_test
   POSTGRES_HOST: postgres
