@@ -1,5 +1,9 @@
 # Hasbihal
 
+[![pipeline status](https://git.fazlamesai.net/murat/hasbihal/badges/master/pipeline.svg)](https://git.fazlamesai.net/murat/hasbihal)
+[![coverage report](https://git.fazlamesai.net/murat/hasbihal/badges/master/coverage.svg)](https://git.fazlamesai.net/murat/hasbihal/commits/master)
+
+
 To start your Phoenix server:
 
   * Install dependencies with `mix deps.get`
