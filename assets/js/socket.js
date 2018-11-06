@@ -69,6 +69,23 @@ if (input.length > 0) {
     input.next('label').text(`${resp.reason}`);
   });
 
+  let presences = {}
+  channel.on("presence_state", (resp) => {
+    presences = Presence.syncState(presences, resp);
+    renderUsers()
+  })
+
+  channel.on("presence_diff", (resp) => {
+    presences = Presence.syncDiff(presences, resp);
+    renderUsers()
+  })
+
+  let renderUsers = () => {
+    $('#chips').html(_.map(Presence.list(presences), user => {
+      return `<span class="mdl-chip" style="margin-right: 10px"><span class="mdl-chip__text">${_.result(user, 'metas[0].name')} online</span></span>`
+    }).join(""));
+  }
+
   input.focus();
   input.on("keypress", event => {
     if (event.keyCode === 13) {
@@ -97,28 +114,6 @@ if (input.length > 0) {
       </span>
     </li>`);
   });
-
-  let presences = []
-  let participants = []
-  channel.on("presence_diff", resp => {
-    presences = Presence.syncDiff(presences, resp);
-
-    _.each(Presence.list(presences), p => {
-      const participant = _.get(p, 'metas[0]');
-      participants.push(participant);
-    });
-
-    participants = _.uniqBy(_.compact(participants), 'name');
-
-    const chips = _.map(participants, p => {
-      return `<span class="mdl-chip mdl-chip--contact" style="margin-right: 10px">
-        <span class="mdl-chip__contact mdl-color--teal mdl-color-text--white">${p.name[0].toUpperCase()}</span>
-        <span class="mdl-chip__text">${p.name}</span>
-      </span>`
-    }).join("");
-
-    $('#chips').html(chips);
-  })
 }
 
 export default socket

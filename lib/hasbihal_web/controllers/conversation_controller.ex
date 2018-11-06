@@ -36,8 +36,22 @@ defmodule HasbihalWeb.ConversationController do
 
   @doc false
   def messages(conn, %{"key" => key}) do
-    conversation = Conversations.get_conversation_by_key!(key)
-    render(conn, "show.html", conversation: conversation)
+    conversations =
+      Repo.all(
+        from(c in Conversation,
+          distinct: true,
+          left_join: u1 in assoc(c, :users),
+          where: u1.id == ^conn.assigns[:current_user].id and c.key == ^key
+        )
+      )
+
+    if length(conversations) > 0 do
+      render(conn, "show.html", conversation: List.first(conversations))
+    else
+      conn
+      |> put_flash(:error, "You are not in this conversation!")
+      |> redirect(to: Routes.user_path(conn, :index))
+    end
   end
 
   @doc false

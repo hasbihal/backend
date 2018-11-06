@@ -8,7 +8,6 @@
     <label class="mdl-textfield__label" for="message">Send a message...</label>
   </div>
 
-  online users:
   <div id="chips"></div>
 </div>
 

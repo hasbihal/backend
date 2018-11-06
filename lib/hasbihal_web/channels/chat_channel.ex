@@ -25,15 +25,13 @@ defmodule HasbihalWeb.ChatChannel do
 
   @doc false
   def handle_info(:after_join, socket) do
+    Presence.track(socket, socket.assigns.user.id, %{
+      typing: false,
+      name: socket.assigns.user.name,
+      online_at: inspect(System.system_time(:seconds))
+    })
+
     push(socket, "presence_state", Presence.list(socket))
-
-    {:ok, _} =
-      Presence.track(socket, socket.assigns.user.id, %{
-        typing: false,
-        name: socket.assigns.user.name,
-        online_at: inspect(System.system_time(:seconds))
-      })
-
     {:noreply, socket}
   end
 

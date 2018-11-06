@@ -51,7 +51,6 @@ defmodule HasbihalWeb.UserController do
   #   render(conn, "edit.html", user: user, changeset: changeset)
   # end
 
-  @doc false
   # def update(conn, %{"id" => id, "user" => user_params}) do
   #   user = Users.get_user!(id)
 
@@ -66,7 +65,6 @@ defmodule HasbihalWeb.UserController do
   #   end
   # end
 
-  @doc false
   # def delete(conn, %{"id" => id}) do
   #   user = Users.get_user!(id)
   #   {:ok, _user} = Users.delete_user(user)
