@@ -34,13 +34,12 @@
         </div>
       </header>
 
-      <main class="mdl-layout__content">
-        <div class="page-content">
-          <%= render @view_module, @view_template, assigns %>
-        </div>
+      <main class="container">
+        <%= render @view_module, @view_template, assigns %>
       </main>
     </div>
 
+    <script>window.userId = <%= @current_user.id %>;</script>
     <script>window.userToken = "<%= @user_id %>";</script>
     <script src='<%= Routes.static_path(@conn, "/js/app.js") %>'></script>
 

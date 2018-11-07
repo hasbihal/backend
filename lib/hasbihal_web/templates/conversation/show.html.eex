@@ -1,14 +1,17 @@
-<h2><%= @conversation.key %></h2>
+<div class="chat-app">
+  <%# <div class="chat-app-header">header</div> %>
 
-<div class="chat_window">
-  <ul class="messages mdl-list"></ul>
-
-  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-    <input class="mdl-textfield__input" type="text" id="message">
-    <label class="mdl-textfield__label" for="message">Send a message...</label>
+  <div class="chat-app-body mdl-list messages">
+    <%# <div class="message type0">message</div> %>
   </div>
 
-  <div id="chips"></div>
+  <div class="chat-app-footer">
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      <input class="mdl-textfield__input" type="text" id="message">
+      <label class="mdl-textfield__label" for="message">Send a message...</label>
+    </div>
+    <div id="info"></div>
+  </div>
 </div>
 
 <script>window.conversationKey = "<%= @conversation.key %>";</script>

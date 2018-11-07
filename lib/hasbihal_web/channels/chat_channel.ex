@@ -27,8 +27,7 @@ defmodule HasbihalWeb.ChatChannel do
   def handle_info(:after_join, socket) do
     Presence.track(socket, socket.assigns.user.id, %{
       typing: false,
-      name: socket.assigns.user.name,
-      online_at: inspect(System.system_time(:seconds))
+      name: socket.assigns.user.name
     })
 
     push(socket, "presence_state", Presence.list(socket))
@@ -49,9 +48,18 @@ defmodule HasbihalWeb.ChatChannel do
   end
 
   @doc false
+  def handle_in("user:typing", %{"typing" => typing}, socket) do
+    Presence.update(socket, socket.assigns.user.id, %{
+      typing: typing,
+      name: socket.assigns.user.name
+    })
+    {:noreply, socket}
+  end
+
+  @doc false
   def handle_in("message:new", payload, socket) do
     user = get_in(socket.assigns, [:user])
-    broadcast!(socket, "message:new", %{user: user.name, message: payload["message"]})
+    broadcast!(socket, "message:new", %{user: user, message: payload["message"]})
     {:noreply, socket}
   end
 
