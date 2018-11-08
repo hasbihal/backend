@@ -1,13 +1,15 @@
 <div class="chat-app">
-  <%# <div class="chat-app-header">header</div> %>
-
-  <div class="chat-app-body mdl-list messages">
-    <%# <div class="message type0">message</div> %>
+  <div class="chat-app-body messages" id="messages">
+    <%= for message <- @messages do %>
+      <div class="message-item <%= if @current_user.id == message.user_id, do: 'mine', else: 'their' %>">
+        <%= text_to_html(message.message) %>
+      </div>
+    <% end %>
   </div>
 
   <div class="chat-app-footer">
     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-      <input class="mdl-textfield__input" type="text" id="message">
+      <textarea class="mdl-textfield__input" type="text" id="message"></textarea>
       <label class="mdl-textfield__label" for="message">Send a message...</label>
     </div>
     <div id="info"></div>

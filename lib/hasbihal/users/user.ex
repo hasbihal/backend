@@ -13,10 +13,11 @@ defmodule Hasbihal.Users.User do
     field(:password, :string, virtual: true)
     field(:password_confirmation, :string, virtual: true)
 
-    # has_many :conversations, {"conversations_participants", Conversation}, foreign_key: :conversation_id
     many_to_many(:conversations, Hasbihal.Conversations.Conversation,
       join_through: "conversations_participants"
     )
+
+    has_many(:messages, Hasbihal.Messages.Message)
 
     timestamps()
   end

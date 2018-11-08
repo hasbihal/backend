@@ -7,7 +7,12 @@ let socket = new Socket("/socket", {
 });
 
 let input = $("#message");
-let wrapper = input.closest('.chat-app').find('.messages');
+let messages_jq = input.closest('.chat-app').find('.messages');
+let messages_el = document.getElementById("messages");
+
+setTimeout(() => {
+  messages_el.scrollTop = messages_el.scrollHeight;
+}, 1000);
 
 if (input.length > 0) {
   socket.connect();
@@ -16,9 +21,12 @@ if (input.length > 0) {
   let channel = socket.channel(`chat:${window.conversationKey}`, { token: window.userToken });
 
   channel.join()
-  .receive("ok", resp => { console.log("Joined successfully", resp) })
+  .receive("ok", resp => {
+    console.log("Joined successfully", resp);
+  })
   .receive("error", resp => {
-    console.error("Connection failed! Because of ", resp)
+    console.error("Connection failed! Because of ", resp);
+
     input.prop("disabled", true);
     input.next('label').text(`${resp.reason}`);
   });
@@ -53,24 +61,23 @@ if (input.length > 0) {
 
   input.focus();
   input.on("keypress", (event) => {
+    if (event.shiftKey) {
+      return;
+    }
     if (event.keyCode === 13) {
-      if (input.val().length === 0) {
+      if (input.val().replace(/\s/g, "").length === 0) {
         if (input.next('span.mdl-textfield__error').length === 0) {
           input.after("<span class='mdl-textfield__error' id='error'>Please write something!</span>");
         }
         input.parent().addClass("is-invalid");
       } else {
         channel.push("message:new", {
-          message: input.val()
+          message: input.val().replace(/^\s+/g, '')
         });
 
         input.val("");
         input.parent().removeClass("is-invalid");
         input.next("span.mdl-textfield__error").remove();
-
-        wrapper.animate({
-          scrollTop: wrapper[0].lastChild.offsetTop
-        }, 200);
       }
     }
   });
@@ -100,16 +107,11 @@ if (input.length > 0) {
   })
 
   channel.on('message:new', (payload) => {
-    wrapper.append(`<div class="mdl-list__item${window.userId === payload.user.id ? ' mine' : ' their'}">
-      <span class="mdl-list__item-primary-content">
-        <!--strong>${payload.user.name}</strong>:-->
-        ${payload.message}
-      </span>
+    messages_jq.append(`<div class="message-item ${window.userId === payload.user.id ? 'mine' : 'their'}">
+      ${payload.message.replace(/(?:\r\n|\r|\n)/g, '<br>')}
     </div>`);
 
-    wrapper.animate({
-      scrollTop: wrapper[0].lastChild.offsetTop
-    }, 200);
+    messages_el.scrollTop = messages_el.scrollHeight;
   });
 }
 

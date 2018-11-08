@@ -36,16 +36,16 @@ defmodule HasbihalWeb.ChatChannel do
 
   # Channels can be used in a request/response fashion
   # by sending replies to requests from the client
-  def handle_in("ping", payload, socket) do
-    {:reply, {:ok, payload}, socket}
-  end
+  # def handle_in("ping", payload, socket) do
+  #   {:reply, {:ok, payload}, socket}
+  # end
 
-  # It is also common to receive messages from the client and
-  # broadcast to everyone in the current topic (chat:lobby).
-  def handle_in("shout", payload, socket) do
-    broadcast(socket, "shout", payload)
-    {:noreply, socket}
-  end
+  # # It is also common to receive messages from the client and
+  # # broadcast to everyone in the current topic (chat:lobby).
+  # def handle_in("shout", payload, socket) do
+  #   broadcast(socket, "shout", payload)
+  #   {:noreply, socket}
+  # end
 
   @doc false
   def handle_in("user:typing", %{"typing" => typing}, socket) do
@@ -53,14 +53,29 @@ defmodule HasbihalWeb.ChatChannel do
       typing: typing,
       name: socket.assigns.user.name
     })
+
     {:noreply, socket}
   end
 
   @doc false
-  def handle_in("message:new", payload, socket) do
+  def handle_in("message:new", %{"message" => message}, socket) do
     user = get_in(socket.assigns, [:user])
-    broadcast!(socket, "message:new", %{user: user, message: payload["message"]})
+    broadcast!(socket, "message:new", %{user: user, message: message})
+
+    key = List.last(String.split(socket.topic, ":"))
+
+    Hasbihal.Messages.create_message(%{
+      message: message,
+      user_id: user.id,
+      conversation_id: Hasbihal.Conversations.get_conversation_by_key!(key).id
+    })
+
     {:noreply, socket}
+  end
+
+  @doc false
+  def handle_in("message:new", %{"message" => ""}, socket) do
+    {:error, socket}
   end
 
   @doc false

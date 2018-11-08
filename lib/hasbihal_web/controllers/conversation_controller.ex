@@ -5,7 +5,7 @@ defmodule HasbihalWeb.ConversationController do
   import Ecto.Query, only: [from: 2]
 
   alias Hasbihal.Repo
-  alias Hasbihal.{Conversations, Conversations.Conversation, Users.User}
+  alias Hasbihal.{Conversations, Conversations.Conversation, Messages.Message, Users.User}
 
   @doc false
   def index(conn, params) do
@@ -36,17 +36,25 @@ defmodule HasbihalWeb.ConversationController do
 
   @doc false
   def messages(conn, %{"key" => key}) do
+    messages_query = from(m in Message, order_by: [desc: m.inserted_at], limit: 10)
+
     conversations =
       Repo.all(
         from(c in Conversation,
           distinct: true,
           left_join: u1 in assoc(c, :users),
-          where: u1.id == ^conn.assigns[:current_user].id and c.key == ^key
+          where: u1.id == ^conn.assigns[:current_user].id and c.key == ^key,
+          preload: [messages: ^messages_query]
         )
       )
 
     if length(conversations) > 0 do
-      render(conn, "show.html", conversation: List.first(conversations))
+      conversation = List.first(conversations)
+
+      render(conn, "show.html",
+        conversation: conversation,
+        messages: conversation.messages |> Enum.reverse()
+      )
     else
       conn
       |> put_flash(:error, "You are not in this conversation!")
