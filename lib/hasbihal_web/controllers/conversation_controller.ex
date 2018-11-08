@@ -1,11 +1,13 @@
 defmodule HasbihalWeb.ConversationController do
+  @moduledoc false
   use HasbihalWeb, :controller
 
   import Ecto.Query, only: [from: 2]
 
   alias Hasbihal.Repo
-  alias Hasbihal.{Conversations, Conversations.Conversation, Users.User}
+  alias Hasbihal.{Conversations, Conversations.Conversation, Messages.Message, Users.User}
 
+  @doc false
   def index(conn, params) do
     if uid = get_in(params, ["uid"]) do
       users = [uid, conn.assigns[:current_user].id]
@@ -26,16 +28,41 @@ defmodule HasbihalWeb.ConversationController do
     end
   end
 
+  @doc false
   def show(conn, %{"id" => id}) do
     conversation = Conversations.get_conversation!(id)
     render(conn, "show.html", conversation: conversation)
   end
 
+  @doc false
   def messages(conn, %{"key" => key}) do
-    conversation = Conversations.get_conversation_by_key!(key)
-    render(conn, "show.html", conversation: conversation)
+    messages_query = from(m in Message, order_by: [desc: m.inserted_at], limit: 10)
+
+    conversations =
+      Repo.all(
+        from(c in Conversation,
+          distinct: true,
+          left_join: u1 in assoc(c, :users),
+          where: u1.id == ^conn.assigns[:current_user].id and c.key == ^key,
+          preload: [messages: ^messages_query]
+        )
+      )
+
+    if length(conversations) > 0 do
+      conversation = List.first(conversations)
+
+      render(conn, "show.html",
+        conversation: conversation,
+        messages: conversation.messages |> Enum.reverse()
+      )
+    else
+      conn
+      |> put_flash(:error, "You are not in this conversation!")
+      |> redirect(to: Routes.user_path(conn, :index))
+    end
   end
 
+  @doc false
   defp get_conversations_for(cuid, uid) do
     Repo.all(
       from(c in Conversation,
@@ -48,8 +75,9 @@ defmodule HasbihalWeb.ConversationController do
     )
   end
 
+  @doc false
   defp create_new_conversation_for(users) do
-    key = :crypto.strong_rand_bytes(24) |> Base.url_encode64() |> binary_part(0, 24)
+    key = :crypto.strong_rand_bytes(24) |> Base.url_encode64(padding: false) |> binary_part(0, 24)
 
     users = Repo.all(from(u in User, where: u.id in ^users))
 

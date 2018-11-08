@@ -13,6 +13,7 @@ config :hasbihal,
 # Configures the endpoint
 config :hasbihal, HasbihalWeb.Endpoint,
   url: [host: "localhost"],
+  http: [ip: {0, 0, 0, 0}, port: 4000],
   secret_key_base: System.get_env("SECRET_KEY_BASE"),
   render_errors: [view: HasbihalWeb.ErrorView, accepts: ~w(html json)],
   pubsub: [name: Hasbihal.PubSub, adapter: Phoenix.PubSub.PG2]

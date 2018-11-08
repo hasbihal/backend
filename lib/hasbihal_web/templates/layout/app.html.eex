@@ -34,14 +34,15 @@
         </div>
       </header>
 
-      <main class="mdl-layout__content">
-        <div class="page-content">
-          <%= render @view_module, @view_template, assigns %>
-        </div>
+      <main class="container">
+        <%= render @view_module, @view_template, assigns %>
       </main>
     </div>
 
-    <script>window.userToken = "<%= @user_id %>";</script>
+    <%= if !is_nil(@current_user) do %>
+      <script>window.userId = <%= @current_user.id %>;</script>
+      <script>window.userToken = "<%= @user_id %>";</script>
+    <% end %>
     <script src='<%= Routes.static_path(@conn, "/js/app.js") %>'></script>
 
     <%= if get_flash(@conn) do %>
@@ -49,19 +50,10 @@
         <div class="mdl-snackbar__text"></div>
         <button class="mdl-snackbar__action" type="button"></button>
       </div>
-      <script>
-        document.addEventListener('DOMContentLoaded', function () {
-          // fixme: why i need this timeout?
-          // do not forget this problem, MaterialSnackbar was not loaded when i wanted to show this
-          setTimeout(function () {
-            <%= for {_k, v} <- get_flash(@conn) do %>
-              bar = document.getElementById('notice').MaterialSnackbar;
-              bar.showSnackbar({
-                message: '<%= v %>'
-              });
-            <% end %>
-          }, 1000);
-        });
+      <script type="text/javascript">
+        <%= for {_k, v} <- get_flash(@conn) do %>
+          window.showFlashMessages('<%= v %>')
+        <% end %>
       </script>
     <% end %>
   </body>

@@ -17,3 +17,16 @@ import $ from 'jquery';
 //
 // Local files can be imported directly using relative paths, for example:
 import socket from "./socket"
+
+// fixme:
+window.showFlashMessages = (message) => {
+  const el = document.getElementById('notice');
+  if (el && !$.isFunction(MaterialSnackbar)) {
+    setTimeout((message) => {
+      const bar = el.MaterialSnackbar;
+      bar.showSnackbar({
+        message: message
+      });
+    }, 100);
+  }
+}

@@ -1,12 +1,14 @@
 /* This file is for your main application css. */
 @import "./phoenix.css";
 @import "normalize";
-@import "~material-design-lite/dist/material.min.css";
+@import "~material-design-lite/dist/material.blue-red.min.css";
 
 body {
   margin: 0;
   padding: 0;
 }
+
+.mdl-layout-title { a { color: #fff; text-decoration: none } }
 
 .mdl-layout__container {
   top: 0;
@@ -17,9 +19,17 @@ body {
   padding-left: 40px !important;
 }
 
-.mdl-layout__content {
+.container {
+  width: 100%;
   max-width: 1200px;
+  height: calc(100% - 64px);
+  max-height: calc(100% - 64px);
   margin: 30px auto;
+
+  @media screen and (max-width: 1200px) {
+    width: calc(100% - 40px);
+    margin: 20px;
+  }
 }
 
 .login-card {
@@ -33,21 +43,55 @@ input:disabled {
   background-color: #eee !important;
 }
 
-.chat_window {
-  min-width: 800px;
+.chat-app {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  height: calc(100% - 64px);
+}
+.chat-app-body {
+  display: flex;
+  flex: 1 1 85%;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  align-content: flex-start;
+  overflow: auto;
+  .message-item {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    width: 70%;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 3px;
+    background: #eee;
+    &.mine {
+      background: #0096fa;
+      color: #fff;
+      margin-left: auto;
+    }
 
-  ul.messages {
-    margin: 0;
-    padding: 0;
-
-    li {
-      background: #eeee;
-      border-radius: 2px;
-      margin-bottom: 10px;
+    p:last-child {
+      margin-bottom: 0;
     }
   }
+}
 
-  .mdl-textfield {
-    width: 100%;
+.chat-app-footer {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 10%;
+  min-height: 3em;
+  max-height: 3em;
+  > * { width: 100%; }
+}
+
+.status-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #eee;
+  &.online {
+    background: #a5d6a7;
   }
 }
