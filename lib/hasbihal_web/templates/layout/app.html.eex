@@ -39,8 +39,10 @@
       </main>
     </div>
 
-    <script>window.userId = <%= @current_user.id %>;</script>
-    <script>window.userToken = "<%= @user_id %>";</script>
+    <%= if !is_nil(@current_user) do %>
+      <script>window.userId = <%= @current_user.id %>;</script>
+      <script>window.userToken = "<%= @user_id %>";</script>
+    <% end %>
     <script src='<%= Routes.static_path(@conn, "/js/app.js") %>'></script>
 
     <%= if get_flash(@conn) do %>
