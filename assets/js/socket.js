@@ -7,14 +7,15 @@ let socket = new Socket("/socket", {
 });
 
 let input = $("#message");
-let messages_jq = input.closest('.chat-app').find('.messages');
-let messages_el = document.getElementById("messages");
-
-setTimeout(() => {
-  messages_el.scrollTop = messages_el.scrollHeight;
-}, 1000);
 
 if (input.length > 0) {
+  let messages_jq = input.closest('.chat-app').find('.messages');
+  let messages_el = document.getElementById("messages");
+
+  setTimeout(() => {
+    messages_el.scrollTop = messages_el.scrollHeight;
+  }, 1000);
+
   socket.connect();
 
   // Now that you are connected, you can join channels with a topic:

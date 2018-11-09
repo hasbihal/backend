@@ -24,8 +24,37 @@
           <nav class="mdl-navigation mdl-layout--large-screen-only">
             <a class="mdl-navigation__link" href="<%= Routes.user_path(@conn, :index) %>">users</a>
             <%= if @user_signed_in? do %>
-              <a class="mdl-navigation__link" href="<%= Routes.page_path(@conn, :index) %>"><%= @current_user.name %></a>
-              <%= link("sign out", to: Routes.session_path(@conn, :delete, @current_user.id), method: :delete, class: "mdl-navigation__link", data: [confirm: "Really?"]) %>
+              <div style="position: relative">
+                <button id="messages-dropdown"
+                        class="mdl-button mdl-js-button mdl-button--icon">
+                  <i class="material-icons">notifications_active</i>
+                  <%# <i class="material-icons">notifications_none</i> %>
+                </button>
+                <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
+                    style="min-width: 200px"
+                    for="messages-dropdown">
+                  <%= for conversation <- @conn.assigns[:conversations] do %>
+                    <li class="mdl-menu__item" style="display: flex;
+                                                      flex-direction: column;
+                                                      justify-content: center;
+                                                      padding: 5px 16px;
+                                                      height: initial;
+                                                      min-height: 48px;
+                                                      line-height: initial;">
+                      <a href="<%= Routes.message_path(@conn, :messages, conversation.key) %>">
+                        <%= Map.get(List.first(Enum.filter(conversation.users, fn v -> v.id != @current_user.id end)), :name) %>
+                      </a>
+                      <%= if length(conversation.messages) > 0 do %>
+                        <small style="color: #777;"><%= Map.get(List.first(conversation.messages), :message) %></small>
+                      <% end %>
+                    </li>
+                  <% end %>
+                </ul>
+              </div>
+
+              <%= link(to: Routes.session_path(@conn, :delete, @current_user.id), method: :delete, class: "mdl-navigation__link", data: [confirm: "Really?"]) do %>
+                <i class="material-icons">lock</i>
+              <% end %>
             <% else %>
               <a class="mdl-navigation__link" href="<%= Routes.user_path(@conn, :new) %>">register</a>
               <a class="mdl-navigation__link" href="<%= Routes.session_path(@conn, :new) %>">sign in</a>
@@ -33,16 +62,13 @@
           </nav>
 
           <nav class="mdl-navigation mdl-layout--small-screen-only mobile-menu">
-            <button id="demo-menu-lower-right"
+            <button id="mobile-menu-dropdown"
                     class="mdl-button mdl-js-button mdl-button--icon">
               <i class="material-icons">more_vert</i>
             </button>
 
             <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
-                for="demo-menu-lower-right">
-              <li class="mdl-menu__item">
-                <a href="<%= Routes.user_path(@conn, :index) %>">users</a>
-              </li>
+                for="mobile-menu-dropdown">
               <%= if @user_signed_in? do %>
                 <li class="mdl-menu__item"><a href="<%= Routes.page_path(@conn, :index) %>"><%= @current_user.name %></a></li>
                 <li class="mdl-menu__item"><%= link("sign out", to: Routes.session_path(@conn, :delete, @current_user.id), method: :delete, data: [confirm: "Really?"]) %></li>
