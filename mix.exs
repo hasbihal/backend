@@ -45,7 +45,7 @@ defmodule Hasbihal.MixProject do
     [
       {:phoenix, "~> 1.4.0"},
       {:phoenix_pubsub, "~> 1.1"},
-      {:ecto, "~> 3.0"},
+      {:phoenix_ecto, "~> 4.0"},
       {:ecto_sql, "~> 3.0"},
       {:postgrex, ">= 0.0.0-rc"},
       {:phoenix_html, "~> 2.11"},
