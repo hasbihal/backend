@@ -2,7 +2,7 @@ defmodule HasbihalWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :hasbihal
 
   socket("/socket", HasbihalWeb.UserSocket,
-    websocket: true,
+    websocket: [timeout: 45_000],
     longpoll: false
   )
 

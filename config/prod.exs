@@ -11,7 +11,8 @@ use Mix.Config
 # before starting your production server.
 config :hasbihal, HasbihalWeb.Endpoint,
   http: [:inet6, port: System.get_env("PORT") || 4000],
-  url: [host: "example.com", port: 80],
+  url: [scheme: "https", host: System.get_env("HEROKUAPP_NAME") <> ".herokuapp.com", port: System.get_env("PORT")],
+  force_ssl: [rewrite_on: [:x_forwarded_proto]],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
 # Do not print debug messages in production
@@ -66,6 +67,12 @@ config :logger, level: :info
 # Note you can't rely on `System.get_env/1` when using releases.
 # See the releases documentation accordingly.
 
+# Configure your database
+config :hasbihal, Hasbihal.Repo,
+  url: System.get_env("DATABASE_URL"),
+  pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
+  ssl: true
+
 # Finally import the config/prod.secret.exs which should be versioned
 # separately.
-import_config "prod.secret.exs"
+# import_config "prod.secret.exs"
