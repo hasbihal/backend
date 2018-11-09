@@ -20,9 +20,9 @@
           <span class="mdl-layout-title"><a href="<%= Routes.page_path(@conn, :index) %>">hasbihal</a></span>
           <!-- Add spacer, to align navigation to the right -->
           <div class="mdl-layout-spacer"></div>
-          <!-- Navigation. We hide it in small screens. -->
+
           <nav class="mdl-navigation mdl-layout--large-screen-only">
-            <a class="mdl-navigation__link" href="<%= Routes.user_path(@conn, :index) %>">Users</a>
+            <a class="mdl-navigation__link" href="<%= Routes.user_path(@conn, :index) %>">users</a>
             <%= if @user_signed_in? do %>
               <a class="mdl-navigation__link" href="<%= Routes.page_path(@conn, :index) %>"><%= @current_user.name %></a>
               <%= link("sign out", to: Routes.session_path(@conn, :delete, @current_user.id), method: :delete, class: "mdl-navigation__link", data: [confirm: "Really?"]) %>
@@ -31,6 +31,28 @@
               <a class="mdl-navigation__link" href="<%= Routes.session_path(@conn, :new) %>">sign in</a>
             <% end %>
           </nav>
+
+          <nav class="mdl-navigation mdl-layout--small-screen-only mobile-menu">
+            <button id="demo-menu-lower-right"
+                    class="mdl-button mdl-js-button mdl-button--icon">
+              <i class="material-icons">more_vert</i>
+            </button>
+
+            <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
+                for="demo-menu-lower-right">
+              <li class="mdl-menu__item">
+                <a href="<%= Routes.user_path(@conn, :index) %>">users</a>
+              </li>
+              <%= if @user_signed_in? do %>
+                <li class="mdl-menu__item"><a href="<%= Routes.page_path(@conn, :index) %>"><%= @current_user.name %></a></li>
+                <li class="mdl-menu__item"><%= link("sign out", to: Routes.session_path(@conn, :delete, @current_user.id), method: :delete, data: [confirm: "Really?"]) %></li>
+              <% else %>
+                <li class="mdl-menu__item"><a href="<%= Routes.user_path(@conn, :new) %>">register</a></li>
+                <li class="mdl-menu__item"><a href="<%= Routes.session_path(@conn, :new) %>">sign in</a></li>
+              <% end %>
+            </ul>
+          </nav>
+
         </div>
       </header>
 
