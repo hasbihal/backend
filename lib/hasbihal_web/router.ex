@@ -43,6 +43,7 @@ defmodule HasbihalWeb.Router do
     resources("/sessions", SessionController, only: [:delete])
     resources("/conversations", ConversationController, only: [:index, :show])
     get("/messages/:key", ConversationController, :messages, as: :message)
+    patch("/messages/:key/seen", ConversationController, :messages_seen, as: :message_seen)
   end
 
   # Other scopes may use custom stacks.

@@ -1,19 +1,12 @@
-<h2>List of conversations</h2>
-
-<div class="mdl-grid">
-  <ul class="demo-list-control mdl-list">
-  <%= for conversation <- @conversations do %>
-    <li class="mdl-list__item" style="float: left; min-width: 240px">
-      <span class="mdl-list__item-primary-content">
-        <i class="material-icons mdl-list__item-avatar">chat</i>
-        <a href="<%= Routes.conversation_path(@conn, :show, conversation.key) %>"><%= conversation.subject %></a>
-      </span>
-      <span class="mdl-list__item-secondary-action">
-        <a class="mdl-button mdl-js-button mdl-button--icon"
-           href="<%= Routes.conversation_path(@conn, :show, conversation.key) %>">
-          <i class="material-icons">chat</i>
-        </a>
-      </span>
+<ul>
+  <%= for conversation <- @conn.assigns[:conversations] do %>
+    <li style="">
+      <a href="<%= Routes.message_path(@conn, :messages, conversation.key) %>">
+        <%= Map.get(List.first(Enum.filter(conversation.users, fn v -> v.id != @current_user.id end)), :name) %>
+      </a>
+      <%= if length(conversation.messages) > 0 do %>
+        <small style="color: #777;"><%= Map.get(List.first(conversation.messages), :message) %></small>
+      <% end %>
     </li>
   <% end %>
-</div>
+</ul>
