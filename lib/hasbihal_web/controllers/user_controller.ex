@@ -45,25 +45,30 @@ defmodule HasbihalWeb.UserController do
   end
 
   @doc false
-  # def edit(conn, %{"id" => id}) do
-  #   user = Users.get_user!(id)
-  #   changeset = Users.change_user(user)
-  #   render(conn, "edit.html", user: user, changeset: changeset)
-  # end
+  def edit(conn, %{"id" => id}) do
+    user = Users.get_user!(id)
+    changeset = Users.change_user(user)
+    render(conn, "edit.html", user: user, changeset: changeset)
+  end
 
-  # def update(conn, %{"id" => id, "user" => user_params}) do
-  #   user = Users.get_user!(id)
+  def update(conn, %{"id" => id, "user" => user_params}) do
+    user = Users.get_user!(id)
 
-  #   case Users.update_user(user, user_params) do
-  #     {:ok, user} ->
-  #       conn
-  #       |> put_flash(:info, "User updated successfully.")
-  #       |> redirect(to: Routes.user_path(conn, :show, user))
+    case Users.update_user(user, user_params) do
+      {:ok, user} ->
+        # if upload = user_params["avatar"] do
+        #   extension = Path.extname(upload.filename)
+        #   File.cp(upload.path, "/#{user.id}-profile#{extension}")
+        # end
 
-  #     {:error, %Ecto.Changeset{} = changeset} ->
-  #       render(conn, "edit.html", user: user, changeset: changeset)
-  #   end
-  # end
+        conn
+        |> put_flash(:info, "User updated successfully.")
+        |> redirect(to: Routes.user_path(conn, :show, user))
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        render(conn, "edit.html", user: user, changeset: changeset)
+    end
+  end
 
   # def delete(conn, %{"id" => id}) do
   #   user = Users.get_user!(id)
