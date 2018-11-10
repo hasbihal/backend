@@ -11,7 +11,11 @@ use Mix.Config
 # before starting your production server.
 config :hasbihal, HasbihalWeb.Endpoint,
   http: [:inet6, port: System.get_env("PORT") || 4000],
-  url: [scheme: "https", host: System.get_env("HEROKUAPP_NAME") <> ".herokuapp.com", port: System.get_env("PORT")],
+  url: [
+    scheme: "https",
+    host: System.get_env("HEROKUAPP_NAME") <> ".herokuapp.com",
+    port: System.get_env("PORT")
+  ],
   force_ssl: [rewrite_on: [:x_forwarded_proto]],
   cache_static_manifest: "priv/static/cache_manifest.json"
 

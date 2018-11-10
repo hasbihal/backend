@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
+    <%= csrf_meta_tag() %>
 
     <title>Hello Hasbihal!</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -27,8 +28,17 @@
               <div style="position: relative">
                 <button id="messages-dropdown"
                         class="mdl-button mdl-js-button mdl-button--icon">
-                  <i class="material-icons">notifications_active</i>
-                  <%# <i class="material-icons">notifications_none</i> %>
+                  <%=
+                  if length(
+                    Enum.filter(@conn.assigns[:conversations], fn v ->
+                      message = List.first(v.messages)
+                      !is_nil(message) && Map.get(message, :user_id) != @current_user.id && is_nil(message.seen_by_id)
+                    end)
+                  ) > 0 do %>
+                    <i class="material-icons">notifications_active</i>
+                  <% else %>
+                    <i class="material-icons">notifications_none</i>
+                  <% end %>
                 </button>
                 <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                     style="min-width: 200px"
@@ -70,7 +80,7 @@
             <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                 for="mobile-menu-dropdown">
               <%= if @user_signed_in? do %>
-                <li class="mdl-menu__item"><a href="<%= Routes.page_path(@conn, :index) %>"><%= @current_user.name %></a></li>
+                <li class="mdl-menu__item"><a href="<%= Routes.conversation_path(@conn, :index) %>">messages</a></li>
                 <li class="mdl-menu__item"><%= link("sign out", to: Routes.session_path(@conn, :delete, @current_user.id), method: :delete, data: [confirm: "Really?"]) %></li>
               <% else %>
                 <li class="mdl-menu__item"><a href="<%= Routes.user_path(@conn, :new) %>">register</a></li>

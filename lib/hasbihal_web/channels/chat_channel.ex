@@ -60,22 +60,18 @@ defmodule HasbihalWeb.ChatChannel do
   @doc false
   def handle_in("message:new", %{"message" => message}, socket) do
     user = get_in(socket.assigns, [:user])
-    broadcast!(socket, "message:new", %{user: user, message: message})
-
     key = List.last(String.split(socket.topic, ":"))
 
-    Hasbihal.Messages.create_message(%{
-      message: message,
-      user_id: user.id,
-      conversation_id: Hasbihal.Conversations.get_conversation_by_key!(key).id
-    })
+    if String.length(message) > 0 &&
+         Hasbihal.Messages.create_message(%{
+           message: message,
+           user_id: user.id,
+           conversation_id: Hasbihal.Conversations.get_conversation_by_key!(key).id
+         }) do
+      broadcast!(socket, "message:new", %{user: user, message: message})
+    end
 
     {:noreply, socket}
-  end
-
-  @doc false
-  def handle_in("message:new", %{"message" => ""}, socket) do
-    {:error, socket}
   end
 
   @doc false

@@ -23,8 +23,7 @@ defmodule HasbihalWeb.ConversationController do
       conn
       |> redirect(to: Routes.message_path(conn, :messages, conversation.key))
     else
-      conversations = Conversations.list_conversations()
-      render(conn, "index.html", conversations: conversations)
+      render(conn, "index.html")
     end
   end
 
@@ -36,7 +35,7 @@ defmodule HasbihalWeb.ConversationController do
 
   @doc false
   def messages(conn, %{"key" => key}) do
-    messages_query = from(m in Message, order_by: [desc: m.inserted_at], limit: 10)
+    messages_query = from(m in Message, order_by: [desc: :inserted_at], limit: 10)
 
     conversations =
       Repo.all(
@@ -59,6 +58,28 @@ defmodule HasbihalWeb.ConversationController do
       conn
       |> put_flash(:error, "You are not in this conversation!")
       |> redirect(to: Routes.user_path(conn, :index))
+    end
+  end
+
+  def messages_seen(conn, %{"key" => key}) do
+    if conn.assigns[:user_signed_in?] do
+      from(m in Message,
+        join: c in assoc(m, :conversation),
+        where:
+          c.key == ^key and is_nil(m.seen_at) and m.user_id != ^conn.assigns[:current_user].id
+      )
+      |> Repo.update_all(
+        set: [
+          seen_by_id: conn.assigns[:current_user].id,
+          seen_at: NaiveDateTime.utc_now()
+        ]
+      )
+
+      json(conn, %{ok: 200})
+    else
+      conn
+      |> put_flash(:error, "You have to sign in before!")
+      |> redirect(to: Routes.session_path(conn, :new))
     end
   end
 

@@ -21,6 +21,17 @@ if (input.length > 0) {
   // Now that you are connected, you can join channels with a topic:
   let channel = socket.channel(`chat:${window.conversationKey}`, { token: window.userToken });
 
+  setTimeout(() => {
+    fetch(`${window.conversationKey}/seen`, {
+      method: "PATCH",
+      headers: {
+        "X-CSRF-Token": $('meta[name=csrf-token]').attr('content'),
+      }
+    }).then(function (response) {
+      console.log(response.json());
+    });
+  }, 5000);
+
   channel.join()
   .receive("ok", resp => {
     console.log("Joined successfully", resp);
