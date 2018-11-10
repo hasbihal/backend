@@ -40,7 +40,7 @@ defmodule Hasbihal.Users.User do
       :avatar
     ])
     |> validate_required([:name, :email, :password, :password_confirmation])
-    |> validate_format(:email, ~r/^[A-Z0-9._%+-]++@[A-Z0-9.-]++\.[A-Z]{2,}+$/)
+    |> validate_format(:email, ~r/^[a-zA-Z0-9_+&*-]+(?:\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,7}$/)
     |> validate_length(:password, min: 8)
     |> validate_confirmation(:password)
     |> encrypt_password()
