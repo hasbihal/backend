@@ -39,7 +39,7 @@ defmodule HasbihalWeb.Router do
   scope "/", HasbihalWeb do
     pipe_through([:browser, :auth, :ensure_auth])
 
-    resources("/users", UserController, only: [:index, :show])
+    resources("/users", UserController, only: [:index, :show, :edit, :update])
     resources("/sessions", SessionController, only: [:delete])
     resources("/conversations", ConversationController, only: [:index, :show])
     get("/messages/:key", ConversationController, :messages, as: :message)

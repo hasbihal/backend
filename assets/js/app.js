@@ -17,6 +17,8 @@ import $ from 'jquery';
 //
 // Local files can be imported directly using relative paths, for example:
 import socket from "./socket"
+import "./getmdl-file.js"
+import "./getmdl-select.js"
 
 // fixme:
 window.showFlashMessages = (message) => {

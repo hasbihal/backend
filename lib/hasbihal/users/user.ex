@@ -8,6 +8,10 @@ defmodule Hasbihal.Users.User do
   schema "users" do
     field(:email, :string)
     field(:name, :string)
+    field(:summary, :string)
+    field(:location, :string)
+    field(:gender, :integer)
+    field(:avatar, :string)
     field(:password_encrypted, :string)
 
     field(:password, :string, virtual: true)
@@ -25,9 +29,18 @@ defmodule Hasbihal.Users.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:name, :email, :password, :password_confirmation])
+    |> cast(attrs, [
+      :name,
+      :email,
+      :password,
+      :password_confirmation,
+      :summary,
+      :location,
+      :gender,
+      :avatar
+    ])
     |> validate_required([:name, :email, :password, :password_confirmation])
-    |> validate_format(:email, ~r/@/)
+    |> validate_format(:email, ~r/^[a-zA-Z0-9_+&*-]+(?:\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,7}$/)
     |> validate_length(:password, min: 8)
     |> validate_confirmation(:password)
     |> encrypt_password()

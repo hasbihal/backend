@@ -25,6 +25,9 @@
           <nav class="mdl-navigation mdl-layout--large-screen-only">
             <a class="mdl-navigation__link" href="<%= Routes.user_path(@conn, :index) %>">users</a>
             <%= if @user_signed_in? do %>
+              <%= link(to: Routes.user_path(@conn, :edit, @current_user.id), class: "mdl-navigation__link") do %>
+                <i class="material-icons">person</i>
+              <% end %>
               <div style="position: relative">
                 <button id="messages-dropdown"
                         class="mdl-button mdl-js-button mdl-button--icon">

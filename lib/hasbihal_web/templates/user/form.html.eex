@@ -1,8 +1,5 @@
 <div class="login-card mdl-card mdl-shadow--2dp">
-  <%= form_for @changeset, @action, fn f -> %>
-    <div class="mdl-card__title">
-      <h2 class="mdl-card__title-text">Register</h2>
-    </div>
+  <%= form_for @changeset, @action, [multipart: true], fn f -> %>
     <div class="mdl-card__supporting-text">
       <div>
         <%= if @changeset.action do %>
@@ -21,6 +18,44 @@
         <%= input f, :email, using: :text_input %>
         <%= error_tag f, :email %>
       </div>
+
+      <div>
+        <%= input f, :summary, using: :text_input %>
+        <%= error_tag f, :summary %>
+      </div>
+
+      <div>
+        <%= input f, :location, using: :text_input %>
+        <%= error_tag f, :location %>
+      </div>
+
+      <div>
+        <div class="mdl-textfield mdl-js-textfield getmdl-select">
+          <input class="mdl-textfield__input" id="user_gender" readonly />
+          <input type="hidden" name="user[gender]" />
+          <label class="mdl-textfield__label" for="user_gender">Gender</label>
+          <ul class="mdl-menu mdl-menu--bottom-left mdl-js-menu" for="user_gender">
+            <li class="mdl-menu__item" data-val="0">None</li>
+            <li class="mdl-menu__item" data-val="1">Male</li>
+            <li class="mdl-menu__item" data-val="2">Female</li>
+            <li class="mdl-menu__item" data-val="3">Both</li>
+          </ul>
+        </div>
+        <%= error_tag f, :gender %>
+      </div>
+
+      <div>
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-textfield--file">
+          <input class="mdl-textfield__input" id="file" type="text" readonly>
+          <label class="mdl-textfield__label" for="user_avatar">Avatar</label>
+          <div class="mdl-button mdl-button--primary mdl-button--icon mdl-button--file">
+            <i class="material-icons">attach_file</i>
+            <%= file_input f, :avatar %>
+          </div>
+        </div>
+        <%= error_tag f, :avatar %>
+      </div>
+
 
       <div>
         <%= input f, :password, using: :password_input %>
