@@ -30,7 +30,7 @@ defmodule Hasbihal.MixProject do
   def application do
     [
       mod: {Hasbihal.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :timex]
     ]
   end
 
@@ -56,6 +56,7 @@ defmodule Hasbihal.MixProject do
       {:bcrypt_elixir, "~> 1.0"},
       {:guardian, "~> 1.1"},
       {:comeonin, "~> 4.0"},
+      {:timex, "~> 3.1"},
       {:credo, "~> 0.8", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.19", only: :dev, runtime: false}
     ]

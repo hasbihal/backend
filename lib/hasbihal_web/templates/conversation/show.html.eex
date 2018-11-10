@@ -3,6 +3,16 @@
     <%= for message <- @messages do %>
       <div class="message-item <%= if @current_user.id == message.user_id, do: 'mine', else: 'their' %>">
         <%= text_to_html(message.message) %>
+        <p style="margin-top: -16px">
+          <small>
+            <em>
+              <%=
+              {:ok, formatted_date} = Timex.format(message.inserted_at, "%d %b, %H:%M", :strftime)
+              formatted_date
+              %>
+            </em>
+          </small>
+        </p>
       </div>
     <% end %>
   </div>
