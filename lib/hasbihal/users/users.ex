@@ -18,7 +18,11 @@ defmodule Hasbihal.Users do
 
   """
   def list_users do
-    Repo.all(User)
+    Repo.all(
+      from(u in User,
+        where: is_nil(u.confirmed_at) == false
+      )
+    )
   end
 
   @doc """
@@ -116,5 +120,9 @@ defmodule Hasbihal.Users do
   """
   def change_user(%User{} = user) do
     User.changeset(user, %{})
+  end
+
+  def confirm_user!(%User{} = user) do
+    update_user(user, %{confirmed_at: NaiveDateTime.utc_now()})
   end
 end

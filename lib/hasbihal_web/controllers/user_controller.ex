@@ -4,13 +4,17 @@ defmodule HasbihalWeb.UserController do
 
   import Ecto.Query, only: [from: 2]
   alias Hasbihal.Guardian.Plug, as: GuardianPlug
-  alias Hasbihal.{Repo, Users, Users.User}
+  alias Hasbihal.{Repo, Mailer, Email, Users, Users.User}
 
   @doc false
   def index(conn, _params) do
     users =
       if current_user = conn.assigns[:current_user] do
-        Repo.all(from(u in User, where: u.id != ^current_user.id))
+        Repo.all(
+          from(u in User,
+            where: is_nil(u.confirmed_at) == false and u.id != ^current_user.id
+          )
+        )
       else
         Users.list_users()
       end
@@ -28,6 +32,8 @@ defmodule HasbihalWeb.UserController do
   def create(conn, %{"user" => user_params}) do
     case Users.create_user(user_params) do
       {:ok, user} ->
+        Email.confirmation_mail(user.email) |> Mailer.deliver_now()
+
         conn
         |> put_flash(:info, "User created successfully.")
         |> GuardianPlug.sign_in(user)

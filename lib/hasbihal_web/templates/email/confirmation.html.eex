@@ -1,0 +1,13 @@
+<table class="sm-w-full" cellpadding="0" cellspacing="0" role="presentation" width="600">
+  <tr>
+    <td class="sm-px-32" style="border-bottom: 6px solid #dddfed; border-radius: 4px; padding: 40px; text-align: left;" bgcolor="#ffffff" align="left">
+      <h3 style="font-weight: 500; margin-top: 0; color: #1f1c3f; font-size: 24px;">Welcome to Hasbihal</h3>
+      <p style="line-height: 22px; margin-bottom: 32px; color: #495588; font-size: 16px;">
+        Thank you for signing up for Hasbihal! Please confirm your email address by clicking the link below.
+      </p>
+      <p style="line-height: 22px; color: #495588; font-size: 16px;">
+        <a href="https://hasbihal.com/users/session" style="color: #00aeff; text-decoration: none;">confirm my account</a>
+      </p>
+    </td>
+  </tr>
+</table>

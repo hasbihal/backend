@@ -7,6 +7,7 @@ defmodule Hasbihal.Users.User do
 
   schema "users" do
     field(:email, :string)
+    field(:confirmed_at, :naive_datetime)
     field(:name, :string)
     field(:summary, :string)
     field(:location, :string)
@@ -32,6 +33,7 @@ defmodule Hasbihal.Users.User do
     |> cast(attrs, [
       :name,
       :email,
+      :confirmed_at,
       :password,
       :password_confirmation,
       :summary,
@@ -40,7 +42,10 @@ defmodule Hasbihal.Users.User do
       :avatar
     ])
     |> validate_required([:name, :email, :password, :password_confirmation])
-    |> validate_format(:email, ~r/^[a-zA-Z0-9_+&*-]+(?:\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,7}$/)
+    |> validate_format(
+      :email,
+      ~r/^[a-zA-Z0-9_+&*-]+(?:\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,7}$/
+    )
     |> validate_length(:password, min: 8)
     |> validate_confirmation(:password)
     |> encrypt_password()
