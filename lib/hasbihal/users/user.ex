@@ -27,29 +27,74 @@ defmodule Hasbihal.Users.User do
     timestamps()
   end
 
-  @doc false
-  def changeset(user, attrs) do
+  @permitted_params [
+    :name,
+    :email,
+    :confirmed_at,
+    :password,
+    :password_confirmation,
+    :summary,
+    :location,
+    :gender,
+    :avatar
+  ]
+
+  @required_params [
+    :name,
+    :email,
+    :password,
+    :password_confirmation
+  ]
+
+  @doc """
+  Changeset definition for creating users
+  """
+  def insert_changeset(user, params) do
     user
-    |> cast(attrs, [
-      :name,
-      :email,
-      :confirmed_at,
-      :password,
-      :password_confirmation,
-      :summary,
-      :location,
-      :gender,
-      :avatar
-    ])
-    |> validate_required([:name, :email, :password, :password_confirmation])
-    |> validate_format(
-      :email,
-      ~r/^[a-zA-Z0-9_+&*-]+(?:\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,7}$/
-    )
-    |> validate_length(:password, min: 8)
-    |> validate_confirmation(:password)
-    |> encrypt_password()
-    |> unique_constraint(:email)
+    |> cast(params, @permitted_params)
+    |> validate_required(@required_params)
+    |> validate_email()
+    |> validate_password()
+  end
+
+  @doc """
+  Changeset definition for updating users
+  """
+  def update_changeset(user, params) do
+    user
+    |> cast(params, @permitted_params)
+    |> validate_email()
+    |> validate_password()
+  end
+
+  @doc false
+  defp validate_email(changeset) do
+    email = get_change(changeset, :email)
+
+    if is_nil(email) do
+      changeset
+    else
+      changeset
+      |> validate_format(
+        :email,
+        ~r/^[a-zA-Z0-9_+&*-]+(?:\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,7}$/
+      )
+      |> unique_constraint(:email)
+    end
+  end
+
+  @doc false
+  defp validate_password(changeset) do
+    password = get_change(changeset, :password)
+
+    if is_nil(password) do
+      changeset
+    else
+      changeset
+      |> validate_length(:password, min: 8)
+      |> validate_confirmation(:password)
+      |> encrypt_password()
+    end
   end
 
   @doc false

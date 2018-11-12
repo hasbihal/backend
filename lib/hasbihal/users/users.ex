@@ -71,7 +71,7 @@ defmodule Hasbihal.Users do
   """
   def create_user(attrs \\ %{}) do
     %User{}
-    |> User.changeset(attrs)
+    |> User.insert_changeset(attrs)
     |> Repo.insert()
   end
 
@@ -89,7 +89,7 @@ defmodule Hasbihal.Users do
   """
   def update_user(%User{} = user, attrs) do
     user
-    |> User.changeset(attrs)
+    |> User.update_changeset(attrs)
     |> Repo.update()
   end
 
@@ -119,10 +119,40 @@ defmodule Hasbihal.Users do
 
   """
   def change_user(%User{} = user) do
-    User.changeset(user, %{})
+    User.update_changeset(user, %{})
   end
 
+  @doc false
+  def generate_confirmation_token!(%User{} = user) do
+    Phoenix.Token.sign(HasbihalWeb.Endpoint, "user_id", user.id)
+  end
+
+  @doc false
+  def verify_confirmation_token!(token) do
+    Phoenix.Token.verify(HasbihalWeb.Endpoint, "user_id", token)
+  end
+
+  @doc """
+  Updates an User's confirmed_at field as utc_now.
+
+  ## Examples
+
+      iex> confirm_user!(user)
+
+  """
   def confirm_user!(%User{} = user) do
     update_user(user, %{confirmed_at: NaiveDateTime.utc_now()})
+  end
+
+  @doc """
+  Updates an User's confirmed_at field as nil.
+
+  ## Examples
+
+      iex> unconfirm_user!(user)
+
+  """
+  def unconfirm_user!(%User{} = user) do
+    update_user(user, %{confirmed_at: nil})
   end
 end

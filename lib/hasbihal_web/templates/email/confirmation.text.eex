@@ -2,4 +2,4 @@ Welcome to Hasbihal!
 
 Thank you for signing up for Hasbihal! Please confirm your email address by clicking the link below.
 
-<a href="https://hasbihal.com/users/session">confirm my account</a>
+<a href="https://hasbihal.com/users/verify/<%= @token %>">confirm my account</a>
