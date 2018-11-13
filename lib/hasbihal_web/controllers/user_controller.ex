@@ -30,10 +30,23 @@ defmodule HasbihalWeb.UserController do
 
   @doc false
   def create(conn, %{"user" => user_params}) do
-    case Users.create_user(user_params) do
+    bucket = System.get_env("BUCKET_NAME")
+    region = System.get_env("AWS_REGION")
+    uuid = Ecto.UUID.generate()
+    avatar = user_params["avatar"]
+    extension = Path.extname(avatar.filename)
+    filename = "#{uuid}#{extension}"
+
+    case Users.create_user(%{
+           user_params
+           | "avatar" => "https://s3.#{region}.amazonaws.com/#{bucket}/#{filename}"
+         }) do
       {:ok, user} ->
         Email.confirmation_mail(user.email, Users.generate_confirmation_token!(user))
         |> Mailer.deliver_now()
+
+        ExAws.S3.put_object(bucket, filename, File.read!(avatar.path))
+        |> ExAws.request!()
 
         conn
         |> put_flash(:info, "User created successfully.")
