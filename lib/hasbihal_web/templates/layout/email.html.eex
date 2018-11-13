@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+  <meta charset="utf8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="x-apple-disable-message-reformatting">
+  <title>Hasbihal Confirmation</title>
+
+  <!--[if !mso]>
+  <!-->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+
+  <!--<![endif]-->
+
+  <!--[if mso]>
+  <xml>
+    <o:OfficeDocumentSettings>
+      <o:AllowPNG/>
+      <o:PixelsPerInch>96</o:PixelsPerInch>
+    </o:OfficeDocumentSettings>
+  </xml>
+  <style>
+    table {border-collapse: collapse;}
+    td,th,div,p,a,h1,h2,h3,h4,h5,h6 {font-family: "Segoe UI", sans-serif; mso-line-height-rule: exactly;}
+  </style>
+<![endif]-->
+  <style>
+    #outlook a {
+      padding: 0;
+    }
+    @media screen {
+      img {
+        max-width: 100%;
+      }
+      td,
+      th {
+        box-sizing: border-box;
+      }
+      table {
+        font-family: 'Roboto', -apple-system, Segoe UI, Helvetica, sans-serif;
+      }
+    }
+    @media (max-width: 600px) {
+      .sm-inline-block {
+        display: inline-block !important;
+      }
+      .sm-px-14 {
+        padding-left: 14px !important;
+        padding-right: 14px !important;
+      }
+      .sm-px-32 {
+        padding-left: 32px !important;
+        padding-right: 32px !important;
+      }
+      .sm-pb-20 {
+        padding-bottom: 20px !important;
+      }
+      .sm-text-center {
+        text-align: center !important;
+      }
+      .sm-w-full {
+        width: 100% !important;
+      }
+    }
+  </style>
+</head>
+<body style="margin: 0; padding: 0; width: 100%; box-sizing: border-box; word-break: break-word; -webkit-font-smoothing: antialiased;">
+  <div style="display: none; line-height: 0; font-size: 0;">Welcome to Hasbihal</div>
+  <div>
+    <div>
+      <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
+        <tr>
+          <td align="center" width="100%" bgcolor="#f2f2f7">
+            <table class="sm-w-full" cellpadding="0" cellspacing="0" role="presentation" width="600">
+              <tr>
+                <td class="sm-text-center" style="padding-left: 40px; padding-right: 40px; padding-top: 20px; padding-bottom: 40px; text-align: left;" align="left">
+                  <a href="https://hasbihal.com" style="text-decoration: none;">
+                    hasbihal
+                  </a>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div>
+      <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
+        <tr>
+          <td align="center" class="sm-px-14" style="padding-bottom: 24px;" width="100%" bgcolor="#f2f2f7">
+            <%= render @view_module, @view_template, assigns %>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</body>
+</html>

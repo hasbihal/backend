@@ -29,7 +29,8 @@ defmodule HasbihalWeb.Router do
     get("/", PageController, :index)
     get("/about", PageController, :about)
 
-    resources("/users", UserController, except: [:index, :show])
+    get("/users/verify/:token", UserController, :verify)
+    resources("/users", UserController, only: [:index, :new, :create])
     resources("/sessions", SessionController, only: [:new, :create])
 
     # get("/chat/:key", ChatController, :show)

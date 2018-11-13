@@ -4,13 +4,17 @@ defmodule HasbihalWeb.UserController do
 
   import Ecto.Query, only: [from: 2]
   alias Hasbihal.Guardian.Plug, as: GuardianPlug
-  alias Hasbihal.{Repo, Users, Users.User}
+  alias Hasbihal.{Email, Mailer, Repo, Users, Users.User}
 
   @doc false
   def index(conn, _params) do
     users =
       if current_user = conn.assigns[:current_user] do
-        Repo.all(from(u in User, where: u.id != ^current_user.id))
+        Repo.all(
+          from(u in User,
+            where: is_nil(u.confirmed_at) == false and u.id != ^current_user.id
+          )
+        )
       else
         Users.list_users()
       end
@@ -28,6 +32,9 @@ defmodule HasbihalWeb.UserController do
   def create(conn, %{"user" => user_params}) do
     case Users.create_user(user_params) do
       {:ok, user} ->
+        Email.confirmation_mail(user.email, Users.generate_confirmation_token!(user))
+        |> Mailer.deliver_now()
+
         conn
         |> put_flash(:info, "User created successfully.")
         |> GuardianPlug.sign_in(user)
@@ -67,6 +74,27 @@ defmodule HasbihalWeb.UserController do
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "edit.html", user: user, changeset: changeset)
+    end
+  end
+
+  def verify(conn, %{"token" => token}) do
+    case Users.verify_confirmation_token!(token) do
+      {:ok, user_id} ->
+        user = Users.get_user!(user_id)
+        Users.confirm_user!(user)
+
+        conn
+        |> put_flash(
+          :info,
+          "#{String.trim(user.name)}, your account was confirmed!"
+        )
+        |> GuardianPlug.sign_in(user)
+        |> redirect(to: Routes.page_path(conn, :index))
+
+      {:error, reason} ->
+        conn
+        |> put_flash(:info, reason)
+        |> redirect(to: Routes.session_path(conn, :new))
     end
   end
 
