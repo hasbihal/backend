@@ -31,9 +31,6 @@ defmodule HasbihalWeb.Router do
 
     resources("/users", UserController, except: [:index, :show])
     resources("/sessions", SessionController, only: [:new, :create])
-
-    # get("/chat/:key", ChatController, :show)
-    # get("/chat/:id/start", ChatController, :index)
   end
 
   scope "/", HasbihalWeb do
@@ -47,9 +44,11 @@ defmodule HasbihalWeb.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", HasbihalWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", HasbihalWeb.Api do
+    pipe_through(:api)
+
+    resources("/users", UserController, only: [:index, :new, :create])
+  end
 
   defp put_user_token(conn, _) do
     if current_user = conn.assigns[:current_user] do
