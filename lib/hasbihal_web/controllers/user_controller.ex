@@ -86,9 +86,10 @@ defmodule HasbihalWeb.UserController do
         conn
         |> put_flash(
           :info,
-          "#{String.trim(user.name)}, your account was confirmed! Please login with following form."
+          "#{String.trim(user.name)}, your account was confirmed!"
         )
-        |> redirect(to: Routes.session_path(conn, :new))
+        |> GuardianPlug.sign_in(user)
+        |> redirect(to: Routes.page_path(conn, :index))
 
       {:error, reason} ->
         conn
