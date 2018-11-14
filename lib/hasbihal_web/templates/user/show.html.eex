@@ -1,5 +1,7 @@
 <h2><%= @user.name %></h2>
 
+<img src="<%= @user.avatar %>" alt="<%= @user.name %>">
+
 <%= if !is_nil(@current_user) && @user.id != @current_user.id do %>
   <a class="mdl-button mdl-js-button"
     href="<%= Routes.conversation_path(@conn, :index, uid: @user.id) %>">
