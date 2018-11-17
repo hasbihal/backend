@@ -51,3 +51,6 @@ npm-debug.log
 # Editor and IDE files
 /.vscode
 /.idea
+
+# Uploads
+/uploads

@@ -1,6 +1,13 @@
 <div class="login-card mdl-card mdl-shadow--2dp">
   <%= form_for @changeset, @action, [multipart: true], fn f -> %>
     <div class="mdl-card__supporting-text">
+      <%= if @user_signed_in? do %>
+        <div class="user-form-header">
+          <img src="<%= Hasbihal.Avatar.url({@current_user.avatar, @current_user}, :thumb) %>">
+          <p><%= @current_user.name %></p>
+        </div>
+      <% end %>
+
       <div>
         <%= if @changeset.action do %>
           <div class="alert alert-danger">
@@ -30,32 +37,34 @@
       </div>
 
       <div>
+        <% gender = Map.get(@current_user, :gender, 0) %>
         <div class="mdl-textfield mdl-js-textfield getmdl-select">
           <input class="mdl-textfield__input" id="user_gender" readonly />
-          <input type="hidden" name="user[gender]" />
+          <input type="hidden" name="user[gender]" value="<%= gender %>" />
           <label class="mdl-textfield__label" for="user_gender">Gender</label>
           <ul class="mdl-menu mdl-menu--bottom-left mdl-js-menu" for="user_gender">
-            <li class="mdl-menu__item" data-val="0">None</li>
-            <li class="mdl-menu__item" data-val="1">Male</li>
-            <li class="mdl-menu__item" data-val="2">Female</li>
-            <li class="mdl-menu__item" data-val="3">Both</li>
+            <li class="mdl-menu__item" data-val="0" <%= if gender == 0, do: 'data-selected="true"' %>>None</li>
+            <li class="mdl-menu__item" data-val="1" <%= if gender == 1, do: 'data-selected="true"' %>>Male</li>
+            <li class="mdl-menu__item" data-val="2" <%= if gender == 2, do: 'data-selected="true"' %>>Female</li>
+            <li class="mdl-menu__item" data-val="3" <%= if gender == 3, do: 'data-selected="true"' %>>Both</li>
           </ul>
         </div>
         <%= error_tag f, :gender %>
       </div>
 
-      <div>
-        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-textfield--file">
-          <input class="mdl-textfield__input" id="file" type="text" readonly>
-          <label class="mdl-textfield__label" for="user_avatar">Avatar</label>
-          <div class="mdl-button mdl-button--primary mdl-button--icon mdl-button--file">
-            <i class="material-icons">attach_file</i>
-            <%= file_input f, :avatar %>
+      <%= if @user_signed_in? do %>
+        <div>
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-textfield--file">
+            <input class="mdl-textfield__input" id="file" type="text" readonly>
+            <label class="mdl-textfield__label" for="user_avatar">Avatar</label>
+            <div class="mdl-button mdl-button--primary mdl-button--icon mdl-button--file">
+              <i class="material-icons">attach_file</i>
+              <%= file_input f, :avatar %>
+            </div>
           </div>
+          <%= error_tag f, :avatar %>
         </div>
-        <%= error_tag f, :avatar %>
-      </div>
-
+      <% end %>
 
       <div>
         <%= input f, :password, using: :password_input %>

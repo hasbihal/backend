@@ -2,6 +2,7 @@ defmodule Hasbihal.Users.User do
   @moduledoc false
 
   use Ecto.Schema
+  use Arc.Ecto.Schema
   import Ecto.Changeset
   alias Comeonin.Bcrypt
 
@@ -12,7 +13,7 @@ defmodule Hasbihal.Users.User do
     field(:summary, :string)
     field(:location, :string)
     field(:gender, :integer)
-    field(:avatar, :string)
+    field(:avatar, Hasbihal.Avatar.Type)
     field(:password_encrypted, :string)
 
     field(:password, :string, virtual: true)
@@ -35,8 +36,7 @@ defmodule Hasbihal.Users.User do
     :password_confirmation,
     :summary,
     :location,
-    :gender,
-    :avatar
+    :gender
   ]
 
   @required_params [
@@ -52,6 +52,7 @@ defmodule Hasbihal.Users.User do
   def insert_changeset(user, params) do
     user
     |> cast(params, @permitted_params)
+    |> cast_attachments(params, [:avatar])
     |> validate_required(@required_params)
     |> validate_email()
     |> validate_password()
@@ -63,6 +64,7 @@ defmodule Hasbihal.Users.User do
   def update_changeset(user, params) do
     user
     |> cast(params, @permitted_params)
+    |> cast_attachments(params, [:avatar])
     |> validate_email()
     |> validate_password()
   end
