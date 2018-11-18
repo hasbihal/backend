@@ -41,17 +41,35 @@ defmodule HasbihalWeb.ConversationController do
       Repo.all(
         from(c in Conversation,
           distinct: true,
+          join: p in assoc(c, :participants),
           left_join: u1 in assoc(c, :users),
           where: u1.id == ^conn.assigns[:current_user].id and c.key == ^key,
-          preload: [messages: ^messages_query]
+          limit: 1,
+          preload: [participants: p, messages: ^messages_query]
         )
       )
 
     if length(conversations) > 0 do
       conversation = List.first(conversations)
 
+      participants =
+        Hasbihal.Repo.all(
+          from(
+            p in Hasbihal.Conversations.Participant,
+            join: u in assoc(p, :user),
+            where:
+              p.conversation_id == ^conversation.id and
+                p.user_id != ^conn.assigns[:current_user].id,
+            limit: 1,
+            preload: [user: u]
+          )
+        )
+
+      receiver = List.first(participants).user
+
       render(conn, "show.html",
         conversation: conversation,
+        receiver: receiver,
         messages: conversation.messages |> Enum.reverse()
       )
     else

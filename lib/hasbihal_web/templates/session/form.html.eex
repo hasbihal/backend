@@ -12,7 +12,8 @@
       <%= input f, :password, using: :password_input %>
 
       <div>
-        <%= submit "Submit", class: "mdl-button mdl-js-button mdl-button--raised mdl-button--colored" %>
+        <%= submit "Submit", class: "mdl-button mdl-js-button mdl-button--raised mdl-button--colored" %> or
+        <%= link("register", to: Routes.user_path(@conn, :new)) %>
       </div>
     </div>
   <% end %>

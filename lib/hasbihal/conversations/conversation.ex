@@ -10,6 +10,7 @@ defmodule Hasbihal.Conversations.Conversation do
 
     many_to_many(:users, Hasbihal.Users.User, join_through: "conversations_participants")
     has_many(:messages, Hasbihal.Messages.Message)
+    has_many(:participants, Hasbihal.Conversations.Participant)
 
     timestamps()
   end

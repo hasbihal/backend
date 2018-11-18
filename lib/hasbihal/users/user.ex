@@ -54,7 +54,6 @@ defmodule Hasbihal.Users.User do
   def insert_changeset(user, params \\ %{}) do
     user
     |> cast(params, @permitted_params)
-    |> cast_attachments(params, @attachments)
     |> validate_required(@required_params)
     |> validate_email()
     |> validate_password()

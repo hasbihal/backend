@@ -1,28 +1,54 @@
 <div class="chat-app">
-  <div class="chat-app-body messages" id="messages">
-    <%= for message <- @messages do %>
-      <div class="message-item <%= if @current_user.id == message.user_id, do: 'mine', else: 'their' %>">
-        <%= text_to_html(message.message) %>
-        <p style="margin-top: -16px">
-          <small>
-            <em>
-              <%=
-              {:ok, formatted_date} = Timex.format(message.inserted_at, "%d %b, %H:%M", :strftime)
-              formatted_date
-              %>
-            </em>
-          </small>
-        </p>
-      </div>
-    <% end %>
+  <div class="chat-app-sidebar">
+    <ul class="mdl-list mdl-list__item--two-line">
+      <li class="mdl-list__item" style="float: left; min-width: 240px">
+        <span class="mdl-list__item-primary-content">
+          <%= if is_nil(@receiver.avatar) do %>
+            <img class="mdl-list__item-avatar" src="//s.gravatar.com/avatar/<%= :crypto.hash(:md5, @receiver.email) |> Base.encode16(case: :lower) %>" />
+          <% else %>
+            <img class="mdl-list__item-avatar" src="<%= Hasbihal.Avatar.url({@receiver.avatar, @receiver}, :thumb) %>">
+          <% end %>
+          <a href="<%= Routes.user_path(@conn, :show, @receiver.id) %>"><%= @receiver.name %></a>
+          <span class="mdl-list__item-sub-title"><%= @receiver.summary %></span>
+        </span>
+      </li>
+    </ul>
   </div>
 
-  <div class="chat-app-footer">
-    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-      <textarea class="mdl-textfield__input" type="text" id="message"></textarea>
-      <label class="mdl-textfield__label" for="message">Send a message...</label>
+  <div class="chat-app-body">
+    <div class="chat-app-messages" id="messages">
+      <%= for message <- @messages do %>
+        <div class="message-item <%= if @current_user.id == message.user_id, do: 'mine', else: 'their' %>">
+          <%= text_to_html(message.message) %>
+          <p style="margin-top: -16px">
+            <small>
+              <em>
+                <%=
+                {:ok, formatted_date} = Timex.format(message.inserted_at, "%d %b, %H:%M", :strftime)
+                formatted_date
+                %>
+              </em>
+            </small>
+          </p>
+        </div>
+      <% end %>
     </div>
-    <div id="info"></div>
+
+    <div class="chat-app-footer">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <textarea class="mdl-textfield__input" type="text" id="message"></textarea>
+        <label class="mdl-textfield__label" for="message">
+          <%=
+          Enum.random(["Give a secret...",
+            "Say something to " <> @receiver.name <> "...",
+            "Send a message " <> @receiver.name <> "...",
+            "Send a gif by '/gif gifterm'",
+            "Drop a file here..."])
+          %>
+        </label>
+      </div>
+      <div id="info"></div>
+    </div>
   </div>
 </div>
 

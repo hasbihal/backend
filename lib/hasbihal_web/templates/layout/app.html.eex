@@ -29,20 +29,22 @@
                 <i class="material-icons">person</i>
               <% end %>
               <div style="position: relative">
-                <button id="messages-dropdown"
-                        class="mdl-button mdl-js-button mdl-button--icon">
-                  <%=
-                  if length(
+                <a id="messages-dropdown"
+                   class="mdl-button mdl-js-button mdl-button--icon">
+                  <%
+                  notification_count = length(
                     Enum.filter(@conn.assigns[:conversations], fn v ->
                       message = List.first(v.messages)
                       !is_nil(message) && Map.get(message, :user_id) != @current_user.id && is_nil(message.seen_by_id)
                     end)
-                  ) > 0 do %>
-                    <i class="material-icons">notifications_active</i>
+                  )
+                  %>
+                  <%= if notification_count > 0 do %>
+                    <div class="material-icons mdl-badge" data-badge="<%= notification_count %>">notifications_active</div>
                   <% else %>
                     <i class="material-icons">notifications_none</i>
                   <% end %>
-                </button>
+                </a>
                 <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                     style="min-width: 200px"
                     for="messages-dropdown">

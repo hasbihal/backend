@@ -32,6 +32,10 @@ defmodule HasbihalWeb.UserController do
   def create(conn, %{"user" => user_params}) do
     case Users.create_user(user_params) do
       {:ok, user} ->
+        if get_in(user_params, ["avatar"]) do
+          Users.update_user(user, %{avatar: user_params["avatar"]})
+        end
+
         user.email
         |> Email.confirmation_mail(Users.generate_confirmation_token!(user))
         |> Mailer.deliver_now()
