@@ -3,7 +3,7 @@ defmodule HasbihalWeb.ConversationController do
   use HasbihalWeb, :controller
 
   import Ecto.Query, only: [from: 2]
-
+  alias Ecto.Changeset
   alias Hasbihal.Repo
   alias Hasbihal.{Conversations, Conversations.Conversation, Messages.Message, Users.User}
 
@@ -98,13 +98,14 @@ defmodule HasbihalWeb.ConversationController do
 
   @doc false
   defp create_new_conversation_for(users) do
-    key = :crypto.strong_rand_bytes(24) |> Base.url_encode64(padding: false) |> binary_part(0, 24)
+    key =
+      24 |> :crypto.strong_rand_bytes() |> Base.url_encode64(padding: false) |> binary_part(0, 24)
 
     users = Repo.all(from(u in User, where: u.id in ^users))
 
     %Conversation{key: key}
-    |> Ecto.Changeset.change()
-    |> Ecto.Changeset.put_assoc(:users, users)
+    |> Changeset.change()
+    |> Changeset.put_assoc(:users, users)
     |> Repo.insert!()
   end
 end

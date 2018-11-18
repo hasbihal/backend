@@ -28,31 +28,33 @@ defmodule Hasbihal.Users.User do
     timestamps()
   end
 
-  @permitted_params [
-    :name,
-    :email,
-    :confirmed_at,
-    :password,
-    :password_confirmation,
-    :summary,
-    :location,
-    :gender
-  ]
+  @permitted_params ~w(
+    name
+    email
+    confirmed_at
+    password
+    password_confirmation
+    summary
+    location
+    gender
+  )a
 
-  @required_params [
-    :name,
-    :email,
-    :password,
-    :password_confirmation
-  ]
+  @required_params ~w(
+    name
+    email
+    password
+    password_confirmation
+  )a
+
+  @attachments ~w(avatar)a
 
   @doc """
   Changeset definition for creating users
   """
-  def insert_changeset(user, params) do
+  def insert_changeset(user, params \\ %{}) do
     user
     |> cast(params, @permitted_params)
-    |> cast_attachments(params, [:avatar])
+    |> cast_attachments(params, @attachments)
     |> validate_required(@required_params)
     |> validate_email()
     |> validate_password()
@@ -61,10 +63,10 @@ defmodule Hasbihal.Users.User do
   @doc """
   Changeset definition for updating users
   """
-  def update_changeset(user, params) do
+  def update_changeset(user, params \\ %{}) do
     user
     |> cast(params, @permitted_params)
-    |> cast_attachments(params, [:avatar])
+    |> cast_attachments(params, @attachments)
     |> validate_email()
     |> validate_password()
   end

@@ -37,7 +37,7 @@
       </div>
 
       <div>
-        <% gender = Map.get(@current_user, :gender, 0) %>
+        <% gender = Map.get(@current_user || %{}, :gender, 0) %>
         <div class="mdl-textfield mdl-js-textfield getmdl-select">
           <input class="mdl-textfield__input" id="user_gender" readonly />
           <input type="hidden" name="user[gender]" value="<%= gender %>" />
@@ -52,19 +52,17 @@
         <%= error_tag f, :gender %>
       </div>
 
-      <%= if @user_signed_in? do %>
-        <div>
-          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-textfield--file">
-            <input class="mdl-textfield__input" id="file" type="text" readonly>
-            <label class="mdl-textfield__label" for="user_avatar">Avatar</label>
-            <div class="mdl-button mdl-button--primary mdl-button--icon mdl-button--file">
-              <i class="material-icons">attach_file</i>
-              <%= file_input f, :avatar %>
-            </div>
+      <div>
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-textfield--file">
+          <input class="mdl-textfield__input" id="file" type="text" readonly>
+          <label class="mdl-textfield__label" for="user_avatar">Avatar</label>
+          <div class="mdl-button mdl-button--primary mdl-button--icon mdl-button--file">
+            <i class="material-icons">attach_file</i>
+            <%= file_input f, :avatar %>
           </div>
-          <%= error_tag f, :avatar %>
         </div>
-      <% end %>
+        <%= error_tag f, :avatar %>
+      </div>
 
       <div>
         <%= input f, :password, using: :password_input %>

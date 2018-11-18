@@ -17,24 +17,25 @@ defmodule Hasbihal.Auth.CurrentUser do
         limit: 1
       )
 
-    conversations =
-      if !is_nil(current_user) do
-        Hasbihal.Repo.all(
-          from(c in Hasbihal.Conversations.Conversation,
-            distinct: true,
-            left_join: u1 in assoc(c, :users),
-            inner_join: u2 in assoc(c, :users),
-            where: u1.id == ^current_user.id and u2.id != ^current_user.id,
-            preload: [users: u2, messages: ^messages]
-          )
-        )
-      else
-        []
-      end
+    conversations = get_conversations()
 
     conn
     |> assign(:current_user, current_user)
     |> assign(:user_signed_in?, !is_nil(current_user))
     |> assign(:conversations, conversations)
+  end
+
+  defp get_conversations(%{assigns: %{current_user: nil}}, _params), do: []
+
+  defp get_conversations(%{assigns: %{current_user: current_user}}, _params) do
+    Hasbihal.Repo.all(
+      from(c in Hasbihal.Conversations.Conversation,
+        distinct: true,
+        left_join: u1 in assoc(c, :users),
+        inner_join: u2 in assoc(c, :users),
+        where: u1.id == ^current_user.id and u2.id != ^current_user.id,
+        preload: [users: u2, messages: ^messages]
+      )
+    )
   end
 end

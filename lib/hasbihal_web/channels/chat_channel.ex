@@ -2,6 +2,7 @@ defmodule HasbihalWeb.ChatChannel do
   @moduledoc false
   use HasbihalWeb, :channel
   alias HasbihalWeb.Presence
+  alias Hasbihal.{Conversations, Messages}
 
   @doc false
   def join("chat:lobby", payload, socket) do
@@ -63,10 +64,10 @@ defmodule HasbihalWeb.ChatChannel do
     key = List.last(String.split(socket.topic, ":"))
 
     if String.length(message) > 0 &&
-         Hasbihal.Messages.create_message(%{
+         Messages.create_message(%{
            message: message,
            user_id: user.id,
-           conversation_id: Hasbihal.Conversations.get_conversation_by_key!(key).id
+           conversation_id: Conversations.get_conversation_by_key!(key).id
          }) do
       broadcast!(socket, "message:new", %{user: user, message: message})
     end

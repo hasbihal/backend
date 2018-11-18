@@ -32,7 +32,8 @@ defmodule HasbihalWeb.UserController do
   def create(conn, %{"user" => user_params}) do
     case Users.create_user(user_params) do
       {:ok, user} ->
-        Email.confirmation_mail(user.email, Users.generate_confirmation_token!(user))
+        user.email
+        |> Email.confirmation_mail(Users.generate_confirmation_token!(user))
         |> Mailer.deliver_now()
 
         conn
