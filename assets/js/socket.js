@@ -1,5 +1,6 @@
 import { Socket, Presence } from "phoenix";
 import _ from "lodash";
+import Dropzone from "dropzone";
 
 let socket = new Socket("/socket", {
   // logger: (kind, msg, data) => { console.log(`${kind}: ${msg}`, data) },
@@ -11,6 +12,16 @@ let input = $("#message");
 if (input.length > 0) {
   let messages_jq = input.closest('.chat-app').find('#messages');
   let messages_el = document.getElementById("messages");
+
+  const dropzone = new Dropzone("#messages", {
+    url: "/api/v1/files",
+    method: "post",
+    paramName: "file[file]",
+    sending: (_file, _xhr, formData) => {
+      formData.append("file[user_token]", window.userToken);
+      formData.append("file[conversation_key]", window.conversationKey);
+    }
+  });
 
   setTimeout(() => {
     messages_el.scrollTop = messages_el.scrollHeight;
