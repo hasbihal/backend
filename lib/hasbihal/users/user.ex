@@ -2,6 +2,7 @@ defmodule Hasbihal.Users.User do
   @moduledoc false
 
   use Ecto.Schema
+  use Arc.Ecto.Schema
   import Ecto.Changeset
   alias Comeonin.Bcrypt
 
@@ -12,7 +13,7 @@ defmodule Hasbihal.Users.User do
     field(:summary, :string)
     field(:location, :string)
     field(:gender, :integer)
-    field(:avatar, :string)
+    field(:avatar, Hasbihal.Avatar.Type)
     field(:password_encrypted, :string)
 
     field(:password, :string, virtual: true)
@@ -27,29 +28,30 @@ defmodule Hasbihal.Users.User do
     timestamps()
   end
 
-  @permitted_params [
-    :name,
-    :email,
-    :confirmed_at,
-    :password,
-    :password_confirmation,
-    :summary,
-    :location,
-    :gender,
-    :avatar
-  ]
+  @permitted_params ~w(
+    name
+    email
+    confirmed_at
+    password
+    password_confirmation
+    summary
+    location
+    gender
+  )a
 
-  @required_params [
-    :name,
-    :email,
-    :password,
-    :password_confirmation
-  ]
+  @required_params ~w(
+    name
+    email
+    password
+    password_confirmation
+  )a
+
+  @attachments ~w(avatar)a
 
   @doc """
   Changeset definition for creating users
   """
-  def insert_changeset(user, params) do
+  def insert_changeset(user, params \\ %{}) do
     user
     |> cast(params, @permitted_params)
     |> validate_required(@required_params)
@@ -60,9 +62,10 @@ defmodule Hasbihal.Users.User do
   @doc """
   Changeset definition for updating users
   """
-  def update_changeset(user, params) do
+  def update_changeset(user, params \\ %{}) do
     user
     |> cast(params, @permitted_params)
+    |> cast_attachments(params, @attachments)
     |> validate_email()
     |> validate_password()
   end

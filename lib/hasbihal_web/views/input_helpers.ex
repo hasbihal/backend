@@ -4,6 +4,8 @@ defmodule HasbihalWeb.InputHelpers do
   use Phoenix.HTML
   alias Phoenix.HTML.Form
 
+  alias HasbihalWeb.ErrorHelpers
+
   def input(form, field, opts \\ []) do
     type = opts[:using] || Form.input_type(form, field)
 
@@ -18,7 +20,7 @@ defmodule HasbihalWeb.InputHelpers do
     content_tag :div, wrapper_opts do
       label = label(form, field, humanize(field), label_opts)
       input = input(type, form, field, input_opts)
-      error = HasbihalWeb.ErrorHelpers.error_tag(form, field)
+      error = ErrorHelpers.error_tag(form, field)
       [label, input, error || ""]
     end
   end

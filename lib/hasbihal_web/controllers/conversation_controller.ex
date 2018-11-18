@@ -3,7 +3,7 @@ defmodule HasbihalWeb.ConversationController do
   use HasbihalWeb, :controller
 
   import Ecto.Query, only: [from: 2]
-
+  alias Ecto.Changeset
   alias Hasbihal.Repo
   alias Hasbihal.{Conversations, Conversations.Conversation, Messages.Message, Users.User}
 
@@ -41,17 +41,35 @@ defmodule HasbihalWeb.ConversationController do
       Repo.all(
         from(c in Conversation,
           distinct: true,
+          join: p in assoc(c, :participants),
           left_join: u1 in assoc(c, :users),
           where: u1.id == ^conn.assigns[:current_user].id and c.key == ^key,
-          preload: [messages: ^messages_query]
+          limit: 1,
+          preload: [participants: p, messages: ^messages_query]
         )
       )
 
     if length(conversations) > 0 do
       conversation = List.first(conversations)
 
+      participants =
+        Hasbihal.Repo.all(
+          from(
+            p in Hasbihal.Conversations.Participant,
+            join: u in assoc(p, :user),
+            where:
+              p.conversation_id == ^conversation.id and
+                p.user_id != ^conn.assigns[:current_user].id,
+            limit: 1,
+            preload: [user: u]
+          )
+        )
+
+      receiver = List.first(participants).user
+
       render(conn, "show.html",
         conversation: conversation,
+        receiver: receiver,
         messages: conversation.messages |> Enum.reverse()
       )
     else
@@ -98,13 +116,14 @@ defmodule HasbihalWeb.ConversationController do
 
   @doc false
   defp create_new_conversation_for(users) do
-    key = :crypto.strong_rand_bytes(24) |> Base.url_encode64(padding: false) |> binary_part(0, 24)
+    key =
+      24 |> :crypto.strong_rand_bytes() |> Base.url_encode64(padding: false) |> binary_part(0, 24)
 
     users = Repo.all(from(u in User, where: u.id in ^users))
 
     %Conversation{key: key}
-    |> Ecto.Changeset.change()
-    |> Ecto.Changeset.put_assoc(:users, users)
+    |> Changeset.change()
+    |> Changeset.put_assoc(:users, users)
     |> Repo.insert!()
   end
 end

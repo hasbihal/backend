@@ -32,7 +32,12 @@ defmodule HasbihalWeb.UserController do
   def create(conn, %{"user" => user_params}) do
     case Users.create_user(user_params) do
       {:ok, user} ->
-        Email.confirmation_mail(user.email, Users.generate_confirmation_token!(user))
+        if get_in(user_params, ["avatar"]) do
+          Users.update_user(user, %{avatar: user_params["avatar"]})
+        end
+
+        user.email
+        |> Email.confirmation_mail(Users.generate_confirmation_token!(user))
         |> Mailer.deliver_now()
 
         conn
@@ -63,11 +68,6 @@ defmodule HasbihalWeb.UserController do
 
     case Users.update_user(user, user_params) do
       {:ok, user} ->
-        # if upload = user_params["avatar"] do
-        #   extension = Path.extname(upload.filename)
-        #   File.cp(upload.path, "/#{user.id}-profile#{extension}")
-        # end
-
         conn
         |> put_flash(:info, "User updated successfully.")
         |> redirect(to: Routes.user_path(conn, :show, user))

@@ -5,8 +5,7 @@ defmodule HasbihalWeb.SessionController do
   import Comeonin.Bcrypt, only: [checkpw: 2, dummy_checkpw: 0]
 
   alias Hasbihal.Guardian.Plug, as: GuardianPlug
-  alias Hasbihal.Users
-  alias Hasbihal.Users.User
+  alias Hasbihal.{Users, Users.User}
 
   plug(:redirect_if_signed_in when action not in [:delete])
 

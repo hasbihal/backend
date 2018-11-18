@@ -9,7 +9,7 @@ let socket = new Socket("/socket", {
 let input = $("#message");
 
 if (input.length > 0) {
-  let messages_jq = input.closest('.chat-app').find('.messages');
+  let messages_jq = input.closest('.chat-app').find('#messages');
   let messages_el = document.getElementById("messages");
 
   setTimeout(() => {

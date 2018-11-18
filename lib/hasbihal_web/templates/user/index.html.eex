@@ -3,7 +3,11 @@
     <%= for user <- @users do %>
       <li class="mdl-list__item" style="float: left; min-width: 240px">
         <span class="mdl-list__item-primary-content">
-          <img class="mdl-list__item-avatar" src="//s.gravatar.com/avatar/<%= :crypto.hash(:md5, user.email) |> Base.encode16(case: :lower) %>" />
+          <%= if is_nil(user.avatar) do %>
+            <img class="mdl-list__item-avatar" src="//s.gravatar.com/avatar/<%= :crypto.hash(:md5, user.email) |> Base.encode16(case: :lower) %>" />
+          <% else %>
+            <img class="mdl-list__item-avatar" src="<%= Hasbihal.Avatar.url({user.avatar, user}, :thumb) %>">
+          <% end %>
           <a href="<%= Routes.user_path(@conn, :show, user.id) %>"><%= user.name %></a>
           <span class="mdl-list__item-sub-title"><%= user.summary %></span>
         </span>

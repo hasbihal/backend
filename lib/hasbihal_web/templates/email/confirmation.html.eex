@@ -6,7 +6,7 @@
         Thank you for signing up for Hasbihal! Please confirm your email address by clicking the link below.
       </p>
       <p style="line-height: 22px; color: #495588; font-size: 16px;">
-        <a href="https://hasbihal.com/users/verify/<%= @token %>" style="color: #00aeff; text-decoration: none;">confirm my account</a>
+        <a href="<%= HasbihalWeb.Endpoint.url %>/users/verify/<%= @token %>" style="color: #00aeff; text-decoration: none;">confirm my account</a>
       </p>
     </td>
   </tr>

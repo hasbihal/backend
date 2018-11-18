@@ -73,3 +73,6 @@ config :hasbihal, Hasbihal.Repo,
   database: System.get_env("DB_NAME"),
   hostname: System.get_env("DB_HOST"),
   pool_size: 10
+
+config :arc,
+  storage: Arc.Storage.Local

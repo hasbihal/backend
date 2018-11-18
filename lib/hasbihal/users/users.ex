@@ -4,9 +4,8 @@ defmodule Hasbihal.Users do
   """
 
   import Ecto.Query, warn: false
-  alias Hasbihal.Repo
-
-  alias Hasbihal.Users.User
+  alias Phoenix.Token
+  alias Hasbihal.{Repo, Users.User}
 
   @doc """
   Returns the list of users.
@@ -124,12 +123,12 @@ defmodule Hasbihal.Users do
 
   @doc false
   def generate_confirmation_token!(%User{} = user) do
-    Phoenix.Token.sign(HasbihalWeb.Endpoint, "user_id", user.id)
+    Token.sign(HasbihalWeb.Endpoint, "user_id", user.id)
   end
 
   @doc false
   def verify_confirmation_token!(token) do
-    Phoenix.Token.verify(HasbihalWeb.Endpoint, "user_id", token)
+    Token.verify(HasbihalWeb.Endpoint, "user_id", token)
   end
 
   @doc """

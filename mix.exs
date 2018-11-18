@@ -53,12 +53,29 @@ defmodule Hasbihal.MixProject do
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
+
+      # Authentication
       {:bcrypt_elixir, "~> 1.0"},
       {:guardian, "~> 1.1"},
       {:comeonin, "~> 4.0"},
-      {:timex, "~> 3.1"},
+
+      # Use arc and arc_ecto for upload and process images with imagemagick
+      {:arc, "~> 0.11.0"},
+      {:arc_ecto,
+       git: "git@github.com:muratbsts/arc_ecto.git",
+       ref: "28001f4ffc46c4a77eeece9c83973ffc69c64548"},
+
+      # if you're using a s3 bucket for production
+      # install ex_aws and ex_aws_s3, then configure it in config/prod.exs
+      {:ex_aws, "~> 2.0", only: [:prod]},
+      {:ex_aws_s3, "~> 2.0", only: [:prod]},
+      {:hackney, "~> 1.9"},
+      {:sweet_xml, "~> 0.6.5"},
+
+      # Use bamboo for send e-mails
       {:bamboo, "~> 1.1.0"},
       {:bamboo_smtp, "~> 1.6.0"},
+      {:timex, "~> 3.1"},
       {:credo, "~> 0.8", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.19", only: :dev, runtime: false}
     ]
