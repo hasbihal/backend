@@ -49,7 +49,7 @@ defmodule HasbihalWeb.Router do
     pipe_through(:api)
 
     scope "/v1", V1 do
-      resources("/files", FileController, except: [:new, :edit])
+      resources("/files", FileController, only: [:show, :create])
     end
   end
 

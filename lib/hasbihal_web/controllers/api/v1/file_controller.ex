@@ -6,12 +6,20 @@ defmodule HasbihalWeb.Api.V1.FileController do
 
   action_fallback(HasbihalWeb.Api.V1.FallbackController)
 
-  def index(conn, _params) do
-    files = Uploads.list_files()
-    render(conn, "index.json", files: files)
-  end
+  # def index(conn, _params) do
+  #   files = Uploads.list_files()
+  #   render(conn, "index.json", files: files)
+  # end
 
   def create(conn, %{"file" => file_params}) do
+    conversation =
+      Hasbihal.Conversations.get_conversation_by_key!(file_params["conversation_key"])
+
+    user = Hasbihal.Users.get_user_by_token!(file_params["user_token"])
+
+    file_params =
+      Map.merge(file_params, %{"user_id" => user.id, "conversation_id" => conversation.id})
+
     with {:ok, %File{} = file} <- Uploads.create_file(file_params) do
       conn
       |> put_status(:created)
@@ -25,19 +33,19 @@ defmodule HasbihalWeb.Api.V1.FileController do
     render(conn, "show.json", file: file)
   end
 
-  def update(conn, %{"id" => id, "file" => file_params}) do
-    file = Uploads.get_file!(id)
+  # def update(conn, %{"id" => id, "file" => file_params}) do
+  #   file = Uploads.get_file!(id)
 
-    with {:ok, %File{} = file} <- Uploads.update_file(file, file_params) do
-      render(conn, "show.json", file: file)
-    end
-  end
+  #   with {:ok, %File{} = file} <- Uploads.update_file(file, file_params) do
+  #     render(conn, "show.json", file: file)
+  #   end
+  # end
 
-  def delete(conn, %{"id" => id}) do
-    file = Uploads.get_file!(id)
+  # def delete(conn, %{"id" => id}) do
+  #   file = Uploads.get_file!(id)
 
-    with {:ok, %File{}} <- Uploads.delete_file(file) do
-      send_resp(conn, :no_content, "")
-    end
-  end
+  #   with {:ok, %File{}} <- Uploads.delete_file(file) do
+  #     send_resp(conn, :no_content, "")
+  #   end
+  # end
 end

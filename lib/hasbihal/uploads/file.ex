@@ -6,8 +6,9 @@ defmodule Hasbihal.Uploads.File do
 
   schema "files" do
     field(:file, Hasbihal.File.Type)
-    field(:user_id, :id)
-    field(:conversation_id, :id)
+
+    field(:user_id, :integer)
+    field(:conversation_id, :integer)
 
     timestamps()
   end
@@ -15,7 +16,7 @@ defmodule Hasbihal.Uploads.File do
   @doc false
   def changeset(file, attrs) do
     file
-    |> cast(attrs, [:file])
-    |> validate_required([:file])
+    |> cast(attrs, [:file, :conversation_id, :user_id])
+    |> validate_required([:file, :conversation_id, :user_id])
   end
 end
