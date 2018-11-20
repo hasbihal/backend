@@ -16,6 +16,7 @@ if (input.length > 0) {
   const dropzone = new Dropzone("#messages", {
     url: "/api/v1/files",
     method: "post",
+    clickable: false,
     paramName: "file[file]",
     acceptedFiles: "image/*",
     previewTemplate: document

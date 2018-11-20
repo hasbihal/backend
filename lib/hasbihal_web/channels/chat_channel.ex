@@ -63,6 +63,24 @@ defmodule HasbihalWeb.ChatChannel do
     user = get_in(socket.assigns, [:user])
     key = List.last(String.split(socket.topic, ":"))
 
+    message =
+      if Regex.match?(~r/^\/gif\ /, message) do
+        {_command, message} = String.split_at(message, 5)
+
+        giphy_url =
+          "http://api.giphy.com/v1/gifs/translate?apikey=" <>
+            System.get_env("GIPHY_API_TOKEN") <> "&s=" <> message
+
+        {:ok, 200, _headers, client_ref} = :hackney.get(giphy_url, [], "", follow_redirect: true)
+        {:ok, response} = :hackney.body(client_ref)
+        response = Jason.decode!(response)
+
+        "<img src='" <>
+          response["data"]["images"]["original"]["url"] <> "' style='max-width: 200px'/>"
+      else
+        message
+      end
+
     if String.length(message) > 0 &&
          Messages.create_message(%{
            message: message,
