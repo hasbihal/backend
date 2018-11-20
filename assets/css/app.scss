@@ -199,6 +199,7 @@ input:disabled {
   > * { width: 100%; }
 
   .typing-info {
+    display: none;
     position: absolute;
     margin-top: -1em;
     left: 0;

@@ -11,7 +11,7 @@
     <div class="chat-app-messages" id="messages">
       <%= for message <- @messages do %>
         <div class="message-item <%= if @current_user.id == message.user_id, do: 'mine', else: 'their' %>">
-          <%= text_to_html(message.message) %>
+          <%= text_to_html(message.message, escape: false) %>
           <%= if !is_nil(message.file) do %>
             <img src="<%= Hasbihal.File.url({message.file.file, message.file}) %>" style="max-width: 100px; margin-bottom: 16px">
           <% end %>
