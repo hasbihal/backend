@@ -76,6 +76,22 @@ defmodule HasbihalWeb.ChatChannel do
   end
 
   @doc false
+  def handle_in("file:new", %{"file_id" => file_id}, socket) do
+    user = get_in(socket.assigns, [:user])
+    file = Hasbihal.Uploads.get_file!(file_id)
+
+    broadcast!(socket, "file:new", %{
+      user: user,
+      file: %{
+        file_name: file.file.file_name,
+        file_url: Hasbihal.File.url({file.file.file_name, file})
+      }
+    })
+
+    {:noreply, socket}
+  end
+
+  @doc false
   defp authorized?(%{"token" => token} = _payload) do
     if String.length(token) > 0, do: true, else: false
   end

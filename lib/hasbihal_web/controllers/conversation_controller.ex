@@ -35,7 +35,8 @@ defmodule HasbihalWeb.ConversationController do
 
   @doc false
   def messages(conn, %{"key" => key}) do
-    messages_query = from(m in Message, order_by: [desc: :inserted_at], limit: 10)
+    messages_query =
+      from(m in Message, order_by: [desc: :inserted_at], limit: 10, preload: [:file])
 
     conversations =
       Repo.all(

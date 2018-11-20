@@ -57,6 +57,28 @@ defmodule Hasbihal.Users do
   def get_user_by_email!(email), do: Repo.get_by(User, email: email)
 
   @doc """
+  Gets a single user with token verification.
+
+  Raises `Ecto.NoResultsError` if the User does not exist.
+
+  ## Examples
+
+      iex> get_user_by_token!("TOKEN")
+      %User{}
+
+      iex> get_user_by_token!("TOKEN")
+      ** (Ecto.NoResultsError)
+
+  """
+
+  def get_user_by_token!(token) do
+    case Token.verify(HasbihalWeb.Endpoint, "user_id", token, max_age: 3600) do
+      {:ok, id} -> Repo.get_by(User, id: id)
+      {:error, _} -> raise Ecto.NoResultsError
+    end
+  end
+
+  @doc """
   Creates a user.
 
   ## Examples
@@ -128,7 +150,7 @@ defmodule Hasbihal.Users do
 
   @doc false
   def verify_confirmation_token!(token) do
-    Token.verify(HasbihalWeb.Endpoint, "user_id", token)
+    Token.verify(HasbihalWeb.Endpoint, "user_id", token, max_age: 3600)
   end
 
   @doc """
