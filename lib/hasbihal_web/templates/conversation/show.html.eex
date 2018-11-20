@@ -1,18 +1,10 @@
 <div class="chat-app">
   <div class="chat-app-sidebar">
-    <ul class="mdl-list mdl-list__item--two-line">
-      <li class="mdl-list__item" style="float: left; min-width: 240px">
-        <span class="mdl-list__item-primary-content">
-          <%= if is_nil(@receiver.avatar) do %>
-            <img class="mdl-list__item-avatar" src="//s.gravatar.com/avatar/<%= :crypto.hash(:md5, @receiver.email) |> Base.encode16(case: :lower) %>" />
-          <% else %>
-            <img class="mdl-list__item-avatar" src="<%= Hasbihal.Avatar.url({@receiver.avatar, @receiver}, :thumb) %>">
-          <% end %>
-          <a href="<%= Routes.user_path(@conn, :show, @receiver.id) %>"><%= @receiver.name %></a>
-          <span class="mdl-list__item-sub-title"><%= @receiver.summary %></span>
-        </span>
-      </li>
-    </ul>
+    <div class="user-informations">
+      <img src="<%= Hasbihal.Avatar.url({@receiver.avatar, @receiver}, :thumb) %>" class="user-avatar">
+      <h5><%= @receiver.name %></h5>
+      <p><%= @receiver.summary %> @ <%= @receiver.location %></p>
+    </div>
   </div>
 
   <div class="chat-app-body">
@@ -38,6 +30,7 @@
     </div>
 
     <div class="chat-app-footer">
+      <div class="typing-info">typing...</div>
       <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
         <textarea class="mdl-textfield__input" type="text" id="message"></textarea>
         <label class="mdl-textfield__label" for="message">
@@ -50,7 +43,6 @@
           %>
         </label>
       </div>
-      <div id="info"></div>
     </div>
   </div>
 </div>

@@ -72,7 +72,7 @@ defmodule Hasbihal.Users do
   """
 
   def get_user_by_token!(token) do
-    case Token.verify(HasbihalWeb.Endpoint, "user_id", token) do
+    case Token.verify(HasbihalWeb.Endpoint, "user_id", token, max_age: 3600) do
       {:ok, id} -> Repo.get_by(User, id: id)
       {:error, _} -> raise Ecto.NoResultsError
     end
@@ -150,7 +150,7 @@ defmodule Hasbihal.Users do
 
   @doc false
   def verify_confirmation_token!(token) do
-    Token.verify(HasbihalWeb.Endpoint, "user_id", token)
+    Token.verify(HasbihalWeb.Endpoint, "user_id", token, max_age: 3600)
   end
 
   @doc """

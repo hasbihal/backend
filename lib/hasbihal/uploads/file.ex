@@ -2,6 +2,7 @@ defmodule Hasbihal.Uploads.File do
   @moduledoc false
 
   use Ecto.Schema
+  use Arc.Ecto.Schema
   import Ecto.Changeset
 
   schema "files" do
@@ -13,9 +14,10 @@ defmodule Hasbihal.Uploads.File do
   end
 
   @doc false
-  def changeset(file, attrs) do
+  def changeset(file, params \\ %{}) do
     file
-    |> cast(attrs, [:file, :message_id])
+    |> cast(params, [:message_id])
+    |> cast_attachments(params, [:file])
     |> validate_required([:file, :message_id])
   end
 end

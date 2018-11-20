@@ -28,15 +28,12 @@ defmodule Hasbihal.File do
   def filename(_version, {file, _scope}) do
     ext_name = Path.extname(file.file_name)
     Path.basename(file.file_name, ext_name)
-    # <> "-" <>
-    # (10
-    # |> :crypto.strong_rand_bytes()
-    # |> Base.url_encode64(padding: false)
-    # |> binary_part(0, 10))
   end
 
   # Override the storage directory:
-  def storage_dir(_version, {_file, _scope}), do: "uploads/messages"
+  def storage_dir(_version, {_file, scope}) do
+    "uploads/messages/#{scope.message_id}"
+  end
 
   # Provide a default URL if there hasn't been a file uploaded
   # def default_url(version, scope) do

@@ -29,6 +29,8 @@ if (input.length > 0) {
       channel.push("file:new", {
         file_id: response.data.id
       });
+
+      messages_el.scrollTop = messages_el.scrollHeight;
     }
   });
 
@@ -47,8 +49,8 @@ if (input.length > 0) {
       headers: {
         "X-CSRF-Token": $('meta[name=csrf-token]').attr('content'),
       }
-    }).then(function (response) {
-      console.log(response.json());
+    }).then(function (_response) {
+      // console.log(response.json());
     });
   }, 5000);
 
@@ -66,29 +68,26 @@ if (input.length > 0) {
   let presences = {}
   channel.on("presence_state", (resp) => {
     presences = Presence.syncState(presences, resp);
-    renderChips(presences)
+    receiverStatus(presences)
   })
 
   channel.on("presence_diff", (resp) => {
     presences = Presence.syncDiff(presences, resp);
-    renderChips(presences)
+    receiverStatus(presences)
   })
 
-  let renderChips = (presences) => {
-    $('#info').html(_.map(Presence.list(presences, (id, { metas: [user, ...rest] }) => {
+  let receiverStatus = (presences) => {
+    const receiver = _.map(Presence.list(presences, (id, { metas: [user, ...rest] }) => {
       if (parseInt(id) !== window.userId) {
-        return renderUser(user)
-      }
-      return null
-    })).join(""));
-  }
+        $('.user-informations img.user-avatar').addClass('online')
 
-  let renderUser = (user) => {
-    let typing = ''
-    if (user.typing) {
-      typing = ' <em>(typing...)</em>'
-    }
-    return `<span class="status-dot online"></span> ${user.name} ${typing}`;
+        if (user.typing) {
+          $('.typing-info').show();
+        } else {
+          $('.typing-info').hide();
+        }
+      }
+    }))
   }
 
   input.focus();
@@ -147,11 +146,14 @@ if (input.length > 0) {
   });
 
   channel.on('file:new', (payload) => {
-    messages_jq.append(`<div class="message-item ${window.userId === payload.user.id ? 'mine' : 'their'}">
-      ${payload.file.file_name}
-    </div>`);
+    if (window.userId !== payload.user.id) {
+      messages_jq.append(`<div class="message-item ${window.userId === payload.user.id ? 'mine' : 'their'}">
+        ${payload.file.file_name}<br/>
+        <img src="${payload.file.file_url}" style="max-width: 100px"/>
+      </div>`);
 
-    messages_el.scrollTop = messages_el.scrollHeight;
+      messages_el.scrollTop = messages_el.scrollHeight;
+    }
   });
 }
 
