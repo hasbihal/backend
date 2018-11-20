@@ -17,9 +17,18 @@ if (input.length > 0) {
     url: "/api/v1/files",
     method: "post",
     paramName: "file[file]",
+    acceptedFiles: "image/*",
+    previewTemplate: document
+      .querySelector('#dropzone-tpl')
+      .innerHTML,
     sending: (_file, _xhr, formData) => {
       formData.append("file[user_token]", window.userToken);
       formData.append("file[conversation_key]", window.conversationKey);
+    },
+    success: (file, response) => {
+      channel.push("file:new", {
+        file_id: response.data.id
+      });
     }
   });
 
@@ -44,8 +53,8 @@ if (input.length > 0) {
   }, 5000);
 
   channel.join()
-  .receive("ok", resp => {
-    console.log("Joined successfully", resp);
+  .receive("ok", _resp => {
+    // console.log("Joined successfully", resp);
   })
   .receive("error", resp => {
     console.error("Connection failed! Because of ", resp);
@@ -132,6 +141,14 @@ if (input.length > 0) {
   channel.on('message:new', (payload) => {
     messages_jq.append(`<div class="message-item ${window.userId === payload.user.id ? 'mine' : 'their'}">
       ${payload.message.replace(/(?:\r\n|\r|\n)/g, '<br>')}
+    </div>`);
+
+    messages_el.scrollTop = messages_el.scrollHeight;
+  });
+
+  channel.on('file:new', (payload) => {
+    messages_jq.append(`<div class="message-item ${window.userId === payload.user.id ? 'mine' : 'their'}">
+      ${payload.file.file_name}
     </div>`);
 
     messages_el.scrollTop = messages_el.scrollHeight;

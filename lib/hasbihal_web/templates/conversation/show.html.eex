@@ -20,6 +20,9 @@
       <%= for message <- @messages do %>
         <div class="message-item <%= if @current_user.id == message.user_id, do: 'mine', else: 'their' %>">
           <%= text_to_html(message.message) %>
+          <%= if !is_nil(message.file) do %>
+            <img src="<%= Hasbihal.File.url({message.file.file, message.file}) %>" style="max-width: 100px; margin-bottom: 16px">
+          <% end %>
           <p style="margin-top: -16px">
             <small>
               <em>
@@ -49,6 +52,14 @@
       </div>
       <div id="info"></div>
     </div>
+  </div>
+</div>
+
+<div id="dropzone-tpl">
+  <div class="message-item mine">
+    <p data-dz-name></p>
+    <img data-dz-thumbnail />
+    <p data-dz-errormessage></p>
   </div>
 </div>
 

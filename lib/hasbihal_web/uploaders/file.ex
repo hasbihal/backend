@@ -25,7 +25,15 @@ defmodule Hasbihal.File do
   # end
 
   # Override the persisted filenames:
-  def filename(version, _), do: version
+  def filename(_version, {file, _scope}) do
+    ext_name = Path.extname(file.file_name)
+    Path.basename(file.file_name, ext_name)
+    # <> "-" <>
+    # (10
+    # |> :crypto.strong_rand_bytes()
+    # |> Base.url_encode64(padding: false)
+    # |> binary_part(0, 10))
+  end
 
   # Override the storage directory:
   def storage_dir(_version, {_file, _scope}), do: "uploads/messages"

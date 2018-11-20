@@ -4,13 +4,11 @@ defmodule Hasbihal.Repo.Migrations.CreateFiles do
   def change do
     create table(:files) do
       add :file, :string
-      add :user_id, references(:users, on_delete: :nothing)
-      add :conversation_id, references(:conversations, on_delete: :nothing)
+      add :message_id, references(:messages, on_delete: :delete_all)
 
       timestamps()
     end
 
-    create index(:files, [:user_id])
-    create index(:files, [:conversation_id])
+    create index(:files, [:message_id])
   end
 end

@@ -17,8 +17,14 @@ defmodule HasbihalWeb.Api.V1.FileController do
 
     user = Hasbihal.Users.get_user_by_token!(file_params["user_token"])
 
-    file_params =
-      Map.merge(file_params, %{"user_id" => user.id, "conversation_id" => conversation.id})
+    {:ok, message} =
+      Hasbihal.Messages.create_message(%{
+        user_id: user.id,
+        conversation_id: conversation.id,
+        message: file_params["file"].filename
+      })
+
+    file_params = Map.merge(file_params, %{"message_id" => message.id})
 
     with {:ok, %File{} = file} <- Uploads.create_file(file_params) do
       conn

@@ -7,8 +7,7 @@ defmodule Hasbihal.Uploads.File do
   schema "files" do
     field(:file, Hasbihal.File.Type)
 
-    field(:user_id, :integer)
-    field(:conversation_id, :integer)
+    belongs_to(:message, Hasbihal.Messages.Message)
 
     timestamps()
   end
@@ -16,7 +15,7 @@ defmodule Hasbihal.Uploads.File do
   @doc false
   def changeset(file, attrs) do
     file
-    |> cast(attrs, [:file, :conversation_id, :user_id])
-    |> validate_required([:file, :conversation_id, :user_id])
+    |> cast(attrs, [:file, :message_id])
+    |> validate_required([:file, :message_id])
   end
 end

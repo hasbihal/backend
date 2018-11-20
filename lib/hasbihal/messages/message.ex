@@ -11,6 +11,7 @@ defmodule Hasbihal.Messages.Message do
 
     belongs_to(:user, Hasbihal.Users.User)
     belongs_to(:conversation, Hasbihal.Conversations.Conversation)
+    has_one(:file, Hasbihal.Uploads.File)
 
     timestamps()
   end
@@ -22,5 +23,6 @@ defmodule Hasbihal.Messages.Message do
     |> validate_required([:message, :user_id, :conversation_id])
     |> cast_assoc(:user)
     |> cast_assoc(:conversation)
+    |> cast_assoc(:file)
   end
 end
