@@ -13,7 +13,7 @@ if (input.length > 0) {
   let messages_jq = input.closest('.chat-app').find('#messages');
   let messages_el = document.getElementById("messages");
 
-  const dropzone = new Dropzone("#messages", {
+  new Dropzone("#messages", {
     url: "/api/v1/files",
     method: "post",
     clickable: false,
@@ -56,15 +56,15 @@ if (input.length > 0) {
   }, 5000);
 
   channel.join()
-  .receive("ok", _resp => {
-    // console.log("Joined successfully", resp);
-  })
-  .receive("error", resp => {
-    console.error("Connection failed! Because of ", resp);
+    .receive("ok", _resp => {
+      // console.log("Joined successfully", resp);
+    })
+    .receive("error", resp => {
+      console.error("Connection failed! Because of ", resp);
 
-    input.prop("disabled", true);
-    input.next('label').text(`${resp.reason}`);
-  });
+      input.prop("disabled", true);
+      input.next('label').text(`${resp.reason}`);
+    });
 
   let presences = {}
   channel.on("presence_state", (resp) => {
@@ -97,17 +97,20 @@ if (input.length > 0) {
       return;
     }
     if (event.keyCode === 13) {
-      if (input.val().replace(/\s/g, "").length === 0) {
+      const message = input.val().trim().replace(/^[\s]+/g, '').replace(/^[\s]+$/)
+
+      if (message.length === 0) {
         if (input.next('span.mdl-textfield__error').length === 0) {
           input.after("<span class='mdl-textfield__error' id='error'>Please write something!</span>");
         }
         input.parent().addClass("is-invalid");
       } else {
         channel.push("message:new", {
-          message: input.val().replace(/^\s+/g, '')
+          message: message,
+          gif: message.match(/^\/gif /ig) !== null
         });
 
-        input.val("");
+        input.val('');
         input.parent().removeClass("is-invalid");
         input.next("span.mdl-textfield__error").remove();
       }
@@ -139,6 +142,7 @@ if (input.length > 0) {
   })
 
   channel.on('message:new', (payload) => {
+    if (payload.visible_only_id && payload.visible_only_id !== window.userId) { return; }
     messages_jq.append(`<div class="message-item ${window.userId === payload.user.id ? 'mine' : 'their'}">
       ${payload.message.replace(/(?:\r\n|\r|\n)/g, '<br>')}
     </div>`);

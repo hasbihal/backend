@@ -87,6 +87,7 @@ config :ex_aws,
     host: "s3." <> System.get_env("AWS_REGION") <> ".amazonaws.com",
     region: System.get_env("AWS_REGION")
   ]
+
 config :arc,
   storage: Arc.Storage.S3,
   bucket: {:system, "AWS_S3_BUCKET"}

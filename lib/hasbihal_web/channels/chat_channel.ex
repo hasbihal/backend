@@ -35,19 +35,6 @@ defmodule HasbihalWeb.ChatChannel do
     {:noreply, socket}
   end
 
-  # Channels can be used in a request/response fashion
-  # by sending replies to requests from the client
-  # def handle_in("ping", payload, socket) do
-  #   {:reply, {:ok, payload}, socket}
-  # end
-
-  # # It is also common to receive messages from the client and
-  # # broadcast to everyone in the current topic (chat:lobby).
-  # def handle_in("shout", payload, socket) do
-  #   broadcast(socket, "shout", payload)
-  #   {:noreply, socket}
-  # end
-
   @doc false
   def handle_in("user:typing", %{"typing" => typing}, socket) do
     Presence.update(socket, socket.assigns.user.id, %{
@@ -59,35 +46,54 @@ defmodule HasbihalWeb.ChatChannel do
   end
 
   @doc false
+  def handle_in("message:new", %{"message" => message, "gif" => true}, socket) do
+    user = get_in(socket.assigns, [:user])
+    {_command, message} = String.split_at(message, 5)
+
+    try do
+      message = "#{message}\n" <> get_random_gif(message)
+
+      save_message(
+        List.last(String.split(socket.topic, ":")),
+        user,
+        message
+      )
+
+      broadcast!(socket, "message:new", %{user: user, message: message})
+    rescue
+      e in RuntimeError ->
+        broadcast!(socket, "message:new", %{
+          user: user,
+          message: e.message <> "\n<small><em>This message only visible for you...</em></small>",
+          visible_only_id: user.id
+        })
+    end
+
+    {:noreply, socket}
+  end
+
+  @doc false
   def handle_in("message:new", %{"message" => message}, socket) do
     user = get_in(socket.assigns, [:user])
-    key = List.last(String.split(socket.topic, ":"))
 
-    message =
-      if Regex.match?(~r/^\/gif\ /, message) do
-        {_command, message} = String.split_at(message, 5)
+    if String.length(message) > 0 do
+      try do
+        save_message(
+          List.last(String.split(socket.topic, ":")),
+          user,
+          message
+        )
 
-        giphy_url =
-          "http://api.giphy.com/v1/gifs/translate?apikey=" <>
-            System.get_env("GIPHY_API_TOKEN") <> "&s=" <> message
-
-        {:ok, 200, _headers, client_ref} = :hackney.get(giphy_url, [], "", follow_redirect: true)
-        {:ok, response} = :hackney.body(client_ref)
-        response = Jason.decode!(response)
-
-        "<img src='" <>
-          response["data"]["images"]["original"]["url"] <> "' style='max-width: 200px'/>"
-      else
-        message
+        broadcast!(socket, "message:new", %{user: user, message: message})
+      rescue
+        e in RuntimeError ->
+          broadcast!(socket, "message:new", %{
+            user: user,
+            message:
+              e.message <> "\n<small><em>This message only visible for you...</em></small>",
+            visible_only_id: user.id
+          })
       end
-
-    if String.length(message) > 0 &&
-         Messages.create_message(%{
-           message: message,
-           user_id: user.id,
-           conversation_id: Conversations.get_conversation_by_key!(key).id
-         }) do
-      broadcast!(socket, "message:new", %{user: user, message: message})
     end
 
     {:noreply, socket}
@@ -95,11 +101,10 @@ defmodule HasbihalWeb.ChatChannel do
 
   @doc false
   def handle_in("file:new", %{"file_id" => file_id}, socket) do
-    user = get_in(socket.assigns, [:user])
     file = Hasbihal.Uploads.get_file!(file_id)
 
     broadcast!(socket, "file:new", %{
-      user: user,
+      user: get_in(socket.assigns, [:user]),
       file: %{
         file_name: file.file.file_name,
         file_url: Hasbihal.File.url({file.file.file_name, file})
@@ -112,5 +117,35 @@ defmodule HasbihalWeb.ChatChannel do
   @doc false
   defp authorized?(%{"token" => token} = _payload) do
     if String.length(token) > 0, do: true, else: false
+  end
+
+  @doc false
+  defp get_random_gif(message) do
+    giphy_url =
+      "http://api.giphy.com/v1/gifs/translate?apikey=" <>
+        System.get_env("GIPHY_API_TOKEN") <> "&s=" <> message
+
+    case :hackney.get(giphy_url, [], "", follow_redirect: true) do
+      {:ok, 200, _headers, client_ref} ->
+        {:ok, response} = :hackney.body(client_ref)
+        response = Jason.decode!(response)
+
+        "<img width='200' src='#{response["data"]["images"]["fixed_width_small"]["url"]}'/>"
+
+      _ ->
+        raise "Sorry! An error occurred your gif could not be shown."
+    end
+  end
+
+  @doc false
+  defp save_message(key, user, message) do
+    case Messages.create_message(%{
+           message: message,
+           user_id: user.id,
+           conversation_id: Conversations.get_conversation_by_key!(key).id
+         }) do
+      {:ok, message} -> message
+      {:error, reason} -> raise "Your message could not sent, because: " <> reason
+    end
   end
 end
