@@ -107,7 +107,7 @@ defmodule HasbihalWeb.ChatChannel do
       user: get_in(socket.assigns, [:user]),
       file: %{
         file_name: file.file.file_name,
-        file_url: Hasbihal.File.url({file.file.file_name, file})
+        file_url: Hasbihal.File.url({file.file.file_name, file}, signed: true)
       }
     })
 
