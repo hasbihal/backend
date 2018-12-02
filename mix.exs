@@ -91,7 +91,7 @@ defmodule Hasbihal.MixProject do
     [
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
-      test: [
+      check: [
         "format --check-formatted",
         "credo --strict",
         "ecto.create --quiet",

@@ -11,8 +11,9 @@ config :logger, level: :warn
 
 # Configure your database
 config :hasbihal, Hasbihal.Repo,
-  username: "postgres",
-  password: "postgres",
-  database: "hasbihal_test",
   hostname: "localhost",
+  database: "hasbihal_test",
   pool: Ecto.Adapters.SQL.Sandbox
+
+config :arc,
+  storage: Arc.Storage.Local
