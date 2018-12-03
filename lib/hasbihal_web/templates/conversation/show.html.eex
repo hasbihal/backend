@@ -11,7 +11,7 @@
     <div class="chat-app-messages" id="messages">
       <%= for message <- @messages do %>
         <div class="message-item <%= if @current_user.id == message.user_id, do: 'mine', else: 'their' %>">
-          <%= text_to_html(message.message, escape: false) %>
+          <%= sanitize(message.message, :basic_html) %>
           <%= if !is_nil(message.file) do %>
             <img src="<%= Hasbihal.File.url({message.file.file, message.file}, signed: true) %>" style="max-width: 100px; margin-bottom: 16px">
           <% end %>
@@ -50,7 +50,7 @@
 <div id="dropzone-tpl">
   <div class="message-item mine">
     <p data-dz-name></p>
-    <img data-dz-thumbnail />
+    <img data-dz-thumbnail/>
     <p data-dz-errormessage></p>
   </div>
 </div>
