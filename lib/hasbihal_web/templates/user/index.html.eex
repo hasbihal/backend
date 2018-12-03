@@ -6,7 +6,7 @@
           <%= if is_nil(user.avatar) do %>
             <img class="mdl-list__item-avatar" src="//s.gravatar.com/avatar/<%= :crypto.hash(:md5, user.email) |> Base.encode16(case: :lower) %>" />
           <% else %>
-            <img class="mdl-list__item-avatar" src="<%= Hasbihal.Avatar.url({user.avatar, user}, :thumb) %>">
+            <img class="mdl-list__item-avatar" src="<%= Hasbihal.Avatar.url({user.avatar, user, signed: true}, :thumb) %>">
           <% end %>
           <a href="<%= Routes.user_path(@conn, :show, user.id) %>"><%= user.name %></a>
           <span class="mdl-list__item-sub-title"><%= user.summary %></span>

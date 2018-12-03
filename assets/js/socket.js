@@ -144,7 +144,7 @@ if (input.length > 0) {
   channel.on('message:new', (payload) => {
     if (payload.visible_only_id && payload.visible_only_id !== window.userId) { return; }
     messages_jq.append(`<div class="message-item ${window.userId === payload.user.id ? 'mine' : 'their'}">
-      ${payload.message.replace(/(?:\r\n|\r|\n)/g, '<br>')}
+      ${payload.message}
     </div>`);
 
     messages_el.scrollTop = messages_el.scrollHeight;

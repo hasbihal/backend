@@ -3,7 +3,7 @@
     <div class="mdl-card__supporting-text">
       <%= if @user_signed_in? do %>
         <div class="user-form-header">
-          <img src="<%= Hasbihal.Avatar.url({@current_user.avatar, @current_user}, :thumb) %>">
+          <img src="<%= Hasbihal.Avatar.url({@current_user.avatar, @current_user}, :thumb, signed: true) %>">
           <p><%= @current_user.name %></p>
         </div>
       <% end %>

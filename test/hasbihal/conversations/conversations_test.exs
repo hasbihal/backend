@@ -34,7 +34,6 @@ defmodule Hasbihal.ConversationsTest do
                Conversations.create_conversation(@valid_attrs)
 
       assert conversation.key == "some key"
-      assert conversation.subject == "some subject"
     end
 
     test "create_conversation/1 with invalid data returns error changeset" do
@@ -48,7 +47,6 @@ defmodule Hasbihal.ConversationsTest do
                Conversations.update_conversation(conversation, @update_attrs)
 
       assert conversation.key == "some updated key"
-      assert conversation.subject == "some updated subject"
     end
 
     test "update_conversation/2 with invalid data returns error changeset" do

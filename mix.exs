@@ -65,6 +65,10 @@ defmodule Hasbihal.MixProject do
        git: "https://github.com/muratbsts/arc_ecto.git",
        ref: "28001f4ffc46c4a77eeece9c83973ffc69c64548"},
 
+      # Markdown parsing & HTML sanitize
+      {:phoenix_html_sanitizer, "~> 1.0.0"},
+      {:earmark, "~> 1.3.0"},
+
       # if you're using a s3 bucket for production
       # install ex_aws and ex_aws_s3, then configure it in config/prod.exs
       {:ex_aws, "~> 2.0", only: [:prod]},
@@ -91,7 +95,7 @@ defmodule Hasbihal.MixProject do
     [
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
-      test: [
+      check: [
         "format --check-formatted",
         "credo --strict",
         "ecto.create --quiet",

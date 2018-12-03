@@ -78,6 +78,8 @@ defmodule HasbihalWeb.ChatChannel do
 
     if String.length(message) > 0 do
       try do
+        message = parse_markdown_and_sanitize(message)
+
         save_message(
           List.last(String.split(socket.topic, ":")),
           user,
@@ -107,7 +109,7 @@ defmodule HasbihalWeb.ChatChannel do
       user: get_in(socket.assigns, [:user]),
       file: %{
         file_name: file.file.file_name,
-        file_url: Hasbihal.File.url({file.file.file_name, file})
+        file_url: Hasbihal.File.url({file.file.file_name, file}, signed: true)
       }
     })
 
@@ -134,6 +136,18 @@ defmodule HasbihalWeb.ChatChannel do
 
       _ ->
         raise "Sorry! An error occurred your gif could not be shown."
+    end
+  end
+
+  defp parse_markdown_and_sanitize(message) do
+    {:ok, markdown, []} = Earmark.as_html(message |> HtmlSanitizeEx.basic_html())
+
+    case markdown do
+      {:error, _message, errors} ->
+        raise Enum.join(Enum.map(errors, fn {_x, _y, z} -> z end), ", ")
+
+      _ ->
+        markdown
     end
   end
 
