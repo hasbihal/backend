@@ -1,4 +1,4 @@
-defmodule HasbihalWeb.Api.V1.ChangesetView do
+defmodule HasbihalWeb.Api.ChangesetView do
   use HasbihalWeb, :view
 
   @doc """

@@ -1,4 +1,5 @@
 defmodule HasbihalWeb.Api.V1.FileController do
+  @moduledoc false
   use HasbihalWeb, :controller
 
   alias Hasbihal.Uploads
