@@ -1,0 +1,32 @@
+---
+version: '2'
+
+services:
+
+  app:
+    image: hasbihal:latest
+    build: .
+    ports:
+      - "4000:4000"
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_USER=hasbihal
+      - DB_PASS=hasbihal
+      - DB_NAME=hasbihal
+
+  db:
+    image: postgres:10-alpine
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=hasbihal
+      - POSTGRES_DB=hasbihal
+      - POSTGRES_PASSWORD=hasbihal
+
+volumes:
+  db:
