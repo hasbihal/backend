@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+
+  db:
+    image: postgres:10-alpine
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=hasbihal
+      - POSTGRES_DB=hasbihal
+      - POSTGRES_PASSWORD=hasbihal
+
+  app:
+    image: hasbihal:latest
+    ports:
+      - "8080:4000"
+    depends_on:
+      - db
+    env_file: .env.docker
+    environment:
+      - DB_HOST=db
+      - DB_USER=hasbihal
+      - DB_PASS=hasbihal
+      - DB_NAME=hasbihal
+    command: ["./wait-for.sh", "db:5432", "--", "./run.sh"]
+
+volumes:
+  db:
