@@ -12,10 +12,11 @@ use Mix.Config
 config :hasbihal, HasbihalWeb.Endpoint,
   http: [:inet6, port: System.get_env("PORT") || 4000],
   url: [
-    scheme: "https",
-    host: System.get_env("HEROKUAPP_NAME") <> ".herokuapp.com",
-    port: 443
+    scheme: System.get_env("URL_SCHEME") || "https",
+    host: System.get_env("URL_HOST"),
+    port: System.get_env("URL_PORT") || 443
   ],
+  secret_key_base: System.get_env("SECRET_KEY_BASE"),
   force_ssl: [rewrite_on: [:x_forwarded_proto]],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
