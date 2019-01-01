@@ -46,9 +46,13 @@ defmodule HasbihalWeb.Router do
 
   # Other scopes may use custom stacks.
   scope "/api", HasbihalWeb.Api do
-    pipe_through(:api)
+    pipe_through([:api, :auth])
+
+    post("/auth/signup", V1.UserController, :create)
+    post("/auth/signin", AuthController, :signin)
 
     scope "/v1", V1 do
+      resources("/users", UserController, except: [:new, :edit])
       resources("/files", FileController, only: [:show, :create])
 
       resources("/users", UserController, only: [:index, :new, :create])
