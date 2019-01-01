@@ -75,8 +75,12 @@ config :logger, level: :info
 # Configure your database
 config :hasbihal, Hasbihal.Repo,
   url: System.get_env("DATABASE_URL"),
-  pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
+  pool_size: System.get_env("POOL_SIZE") || 10,
   ssl: true
+
+config :hasbihal, Hasbihal.Mailer,
+  adapter: Bamboo.SendGridAdapter,
+  api_key: System.get_env("SENDGRID_KEY")
 
 config :arc,
   storage: Arc.Storage.S3,

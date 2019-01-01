@@ -74,5 +74,9 @@ config :hasbihal, Hasbihal.Repo,
   hostname: System.get_env("DB_HOST"),
   pool_size: 10
 
+config :hasbihal, Hasbihal.Mailer,
+  adapter: Bamboo.LocalAdapter,
+  open_email_in_browser_url: "http://localhost:4000/emails"
+
 config :arc,
   storage: Arc.Storage.Local

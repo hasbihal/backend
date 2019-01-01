@@ -29,17 +29,6 @@ config :hasbihal, Hasbihal.Guardian,
   verify_issuer: true,
   secret_key: System.get_env("SECRET_KEY_BASE")
 
-config :hasbihal, Hasbihal.Mailer,
-  adapter: Bamboo.SMTPAdapter,
-  hostname: System.get_env("SMTP_HOSTNAME"),
-  server: System.get_env("SMTP_SERVER"),
-  port: System.get_env("SMTP_PORT"),
-  username: System.get_env("SMTP_USERNAME"),
-  password: System.get_env("SMTP_PASSWORD"),
-  tls: :if_available,
-  ssl: false,
-  retries: 1
-
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 

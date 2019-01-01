@@ -5,6 +5,7 @@ defmodule HasbihalWeb.Api.AuthController do
   import Comeonin.Bcrypt, only: [checkpw: 2, dummy_checkpw: 0]
 
   alias Hasbihal.Guardian
+  alias Hasbihal.Guardian.Plug, as: GuardianPlug
   alias Hasbihal.{Users, Users.User}
 
   def signin(conn, %{"user" => %{"email" => email, "password" => password}}) do
@@ -14,6 +15,7 @@ defmodule HasbihalWeb.Api.AuthController do
           {:ok, token, _claims} ->
             conn
             |> put_status(:created)
+            |> GuardianPlug.sign_in(user)
             |> put_resp_header("location", Routes.user_path(conn, :show, user))
             |> render("token.json", token: token)
 

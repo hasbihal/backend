@@ -19,6 +19,11 @@ defmodule HasbihalWeb.Router do
     plug(:put_user_token)
   end
 
+  pipeline :api_auth do
+    plug(Hasbihal.Auth.ApiPipeline)
+    plug(Hasbihal.Auth.CurrentUser)
+  end
+
   pipeline :ensure_auth do
     plug(Guardian.Plug.EnsureAuthenticated)
   end
@@ -38,25 +43,35 @@ defmodule HasbihalWeb.Router do
     pipe_through([:browser, :auth, :ensure_auth])
 
     resources("/users", UserController, only: [:index, :show, :edit, :update])
+
     resources("/sessions", SessionController, only: [:delete])
+
     resources("/conversations", ConversationController, only: [:index, :show])
+
     get("/messages/:key", ConversationController, :messages, as: :message)
     patch("/messages/:key/seen", ConversationController, :messages_seen, as: :message_seen)
   end
 
   # Other scopes may use custom stacks.
   scope "/api", HasbihalWeb.Api do
-    pipe_through([:api, :auth])
+    pipe_through([:api, :api_auth])
 
     post("/auth/signup", V1.UserController, :create)
     post("/auth/signin", AuthController, :signin)
+  end
 
-    scope "/v1", V1 do
-      resources("/users", UserController, except: [:new, :edit])
-      resources("/files", FileController, only: [:show, :create])
+  scope "/api/v1", HasbihalWeb.Api.V1 do
+    pipe_through([:api, :api_auth])
 
-      resources("/users", UserController, only: [:index, :new, :create])
-    end
+    get("/me", UserController, :me)
+
+    resources("/users", UserController, only: [:new, :create, :edit, :delete])
+
+    resources("/files", FileController, only: [:show, :create])
+  end
+
+  if Mix.env == :dev do
+    forward "/emails", Bamboo.SentEmailViewerPlug
   end
 
   defp put_user_token(conn, _) do

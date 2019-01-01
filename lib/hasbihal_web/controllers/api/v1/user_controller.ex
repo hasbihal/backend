@@ -3,13 +3,23 @@ defmodule HasbihalWeb.Api.V1.UserController do
   use HasbihalWeb, :controller
 
   alias Hasbihal.Users
-  alias Hasbihal.{Email, Mailer, Repo, Users, Users.User}
+  alias Hasbihal.{Email, Mailer, Users}
 
   action_fallback(HasbihalWeb.Api.V1.FallbackController)
 
   def index(conn, _params) do
     users = Users.list_users()
     render(conn, "index.json", users: users)
+  end
+
+  def me(conn, _params) do
+    IO.inspect(conn.assigns)
+    HasbihalWeb.Api.V1.UserController.show(conn, %{"id" => conn.assigns[:current_user].id})
+  end
+
+  def show(conn, %{"id" => id} = _params) do
+    user = Users.get_user!(id)
+    render(conn, "show.json", user: user)
   end
 
   def create(conn, %{"user" => user_params}) do
