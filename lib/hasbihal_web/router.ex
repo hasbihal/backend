@@ -50,6 +50,8 @@ defmodule HasbihalWeb.Router do
 
     scope "/v1", V1 do
       resources("/files", FileController, only: [:show, :create])
+
+      resources("/users", UserController, only: [:index, :new, :create])
     end
   end
 
