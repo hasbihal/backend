@@ -61,9 +61,7 @@ defmodule Hasbihal.MixProject do
 
       # Use arc and arc_ecto for upload and process images with imagemagick
       {:arc, "~> 0.11.0"},
-      {:arc_ecto,
-       git: "https://github.com/muratbsts/arc_ecto.git",
-       ref: "28001f4ffc46c4a77eeece9c83973ffc69c64548"},
+      {:arc_ecto, "~> 0.11.1"},
 
       # Markdown parsing & HTML sanitize
       {:phoenix_html_sanitizer, "~> 1.0.0"},
